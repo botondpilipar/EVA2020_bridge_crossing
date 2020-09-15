@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XMI xmi.version="1.2" verified="false" timestamp="2020-09-15T16:59:51" xmlns:UML="http://schema.omg.org/spec/UML/1.4">
+<XMI xmi.version="1.2" verified="false" timestamp="2020-09-15T18:05:32" xmlns:UML="http://schema.omg.org/spec/UML/1.4">
  <XMI.header>
   <XMI.documentation>
    <XMI.exporter>umbrello uml modeller http://umbrello.kde.org</XMI.exporter>
@@ -448,6 +448,16 @@
         <UML:AssociationEnd aggregation="none" type="uSPKvdUy4MXqX" visibility="public" isSpecification="false" isNavigable="true" xmi.id="uTMqxCc2wqXlB" name="" changeability="changeable"/>
        </UML:Association.connection>
       </UML:Association>
+      <UML:Class isRoot="false" visibility="public" isLeaf="false" isSpecification="false" xmi.id="uyq28pjLUPHST" name="BridgeCrossingSettings" namespace="Logical_View" isAbstract="false">
+       <UML:Classifier.feature>
+        <UML:Attribute type="uBjad7Tz85q3d" visibility="public" isSpecification="false" xmi.id="uafsW3uU6Ksmw" name="slowPlayers"/>
+        <UML:Attribute type="uBjad7Tz85q3d" visibility="public" isSpecification="false" xmi.id="uokF7VcErdKxq" name="fastPlayers"/>
+        <UML:Attribute type="uBjad7Tz85q3d" visibility="public" isSpecification="false" xmi.id="uqot22sEEUCnb" name="middlePlayers"/>
+        <UML:Attribute type="uNQZlHoOlhSn1" visibility="public" isSpecification="false" xmi.id="ul7xZSS7XjOtE" name="slowPlayerCrossTime"/>
+        <UML:Attribute type="uNQZlHoOlhSn1" visibility="public" isSpecification="false" xmi.id="uk75tEYTqMG81" name="middlePlayerCrossTime"/>
+        <UML:Attribute type="uNQZlHoOlhSn1" visibility="public" isSpecification="false" xmi.id="urzrEzkqUKoKW" name="fastPlayerCrossTime"/>
+       </UML:Classifier.feature>
+      </UML:Class>
      </UML:Namespace.ownedElement>
      <XMI.extension xmi.extender="umbrello">
       <diagrams resolution="96">
@@ -468,6 +478,7 @@
          <classwidget height="64" width="153" isinstance="0" showstereotype="1" usesdiagramusefillcolor="0" showattributes="1" xmi.id="u7aGutuAOOIO7" x="-960.833" textcolor="#000000" showopsigs="601" autoresize="1" showattsigs="601" usefillcolor="1" localid="uDcKMNPABY1ds" fillcolor="#ffff00" showpubliconly="0" showpackage="1" linecolor="#ff0000" usesdiagramfillcolor="0" y="-263.333" showoperations="1" linewidth="0" font="Inter,10,-1,5,50,0,0,0,0,0" showscope="1"/>
          <classwidget height="224" width="490" isinstance="0" showstereotype="1" usesdiagramusefillcolor="0" showattributes="1" xmi.id="udbbBAbl18oHM" x="-537.5" textcolor="#000000" showopsigs="601" autoresize="1" showattsigs="601" usefillcolor="1" localid="uOkdC16Z5kVaQ" fillcolor="#ffff00" showpubliconly="0" showpackage="1" linecolor="#ff0000" usesdiagramfillcolor="0" y="-257.5" showoperations="1" linewidth="0" font="Inter,10,-1,5,50,0,0,0,0,0" showscope="1"/>
          <classwidget height="112" width="277" isinstance="0" showstereotype="1" usesdiagramusefillcolor="0" showattributes="1" xmi.id="uN5rFR9GETBNr" x="-1596.67" textcolor="#000000" showopsigs="601" autoresize="1" showattsigs="601" usefillcolor="1" localid="u1ozbrTmQYMu4" fillcolor="#ffff00" showpubliconly="0" showpackage="1" linecolor="#ff0000" usesdiagramfillcolor="0" y="-438.333" showoperations="1" linewidth="0" font="Inter,10,-1,5,50,0,0,0,0,0" showscope="1"/>
+         <classwidget height="120" width="282" isinstance="0" showstereotype="1" usesdiagramusefillcolor="0" showattributes="1" xmi.id="uyq28pjLUPHST" x="-1460" textcolor="#000000" showopsigs="601" autoresize="1" showattsigs="601" usefillcolor="1" localid="uomtvKuHWpWEZ" fillcolor="#ffff00" showpubliconly="0" showpackage="1" linecolor="#ff0000" usesdiagramfillcolor="0" y="-822.5" showoperations="1" linewidth="0" font="Inter,10,-1,5,50,0,0,0,0,0" showscope="1"/>
         </widgets>
         <messages/>
         <associations>
@@ -567,7 +578,7 @@
   </UML:Model>
  </XMI.content>
  <XMI.extensions xmi.extender="umbrello">
-  <docsettings viewid="u80uyKnQgHrKu" uniqueid="uTMqxCc2wqXlB" documentation=""/>
+  <docsettings viewid="u80uyKnQgHrKu" uniqueid="urzrEzkqUKoKW" documentation=""/>
   <listview>
    <listitem type="800" id="Views" open="1">
     <listitem type="821" id="Component_View" open="1"/>
@@ -588,6 +599,14 @@
       <listitem type="815" id="uneZxKHq2cJww" open="0"/>
       <listitem type="815" id="u5nfdVIKbhx0H" open="0"/>
       <listitem type="815" id="umtHnodgonzlD" open="0"/>
+     </listitem>
+     <listitem type="813" id="uyq28pjLUPHST" open="1">
+      <listitem type="814" id="urzrEzkqUKoKW" open="0"/>
+      <listitem type="814" id="uokF7VcErdKxq" open="0"/>
+      <listitem type="814" id="uk75tEYTqMG81" open="0"/>
+      <listitem type="814" id="uqot22sEEUCnb" open="0"/>
+      <listitem type="814" id="ul7xZSS7XjOtE" open="0"/>
+      <listitem type="814" id="uafsW3uU6Ksmw" open="0"/>
      </listitem>
      <listitem type="807" label="class diagram" id="u80uyKnQgHrKu" open="0"/>
      <listitem type="831" id="uvLfGnxvWFGuY" open="1">
