@@ -3,8 +3,8 @@ import QtQuick.Controls 2.5
 
 ApplicationWindow {
     id: window
-    width: 640
-    height: 480
+    width: 1200
+    height: 900
     visible: true
     title: qsTr("Stack")
 

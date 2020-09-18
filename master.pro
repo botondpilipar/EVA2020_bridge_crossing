@@ -1,5 +1,13 @@
-
+! include(common.pri)
 TEMPLATE = subdirs
-PRECOMPILED_HEADER = utility/common_pch.h
+
+
+INCLUDEPATH += logic/include \
+                access/include \
+                utility/include \
+                view/include
+
 SUBDIRS += view \
-            logic
+            logic \
+            access
+
