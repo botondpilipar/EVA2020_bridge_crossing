@@ -9,5 +9,6 @@ INCLUDEPATH += logic/include \
 
 SUBDIRS += view \
             logic \
-            access
+            access \
+            test
 
