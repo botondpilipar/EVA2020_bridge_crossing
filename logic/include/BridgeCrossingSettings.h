@@ -34,11 +34,6 @@ class BridgeCrossingSettings : public QObject
                WRITE setMediumPlayerNumber
                RESET resetMediumPlayerNumber
                NOTIFY notifyMediumPlayerNumberChanged)
-    Q_PROPERTY(unsigned int mMediumPlayerNumber
-               READ getMediumPlayerNumber
-               WRITE setMediumPlayerNumber
-               RESET resetMediumPlayerNumber
-               NOTIFY notifyMediumPlayerNumberChanged)
     Q_PROPERTY(unsigned int mFastPlayerNumber
                READ getFastPlayerNumber
                WRITE setFastPlayerNumber
