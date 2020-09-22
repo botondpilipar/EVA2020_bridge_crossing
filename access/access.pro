@@ -3,9 +3,9 @@
 QT += core
 
 TEMPLATE = lib
-TARGET = ACCESS
-DEFINES = access_library
-CONFIG += create_prl
+TARGET = access
+DEFINES = ACCESS
+CONFIG += staticlib
 
 INCLUDEPATH += include
 HEADERS += include/ISerializable.h \

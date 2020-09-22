@@ -28,7 +28,8 @@ struct BoardData : public ISerializable,
     BoardData(QVector<PlayerData>& playerData,
               ScoredPoint point,
               unsigned int playerNumber,
-              GameState state);
+              BridgeCrossingTypes::GameState state);
+
     BoardData(const BoardData& other);
     BoardData(BoardData&& other);
 
@@ -41,7 +42,7 @@ struct BoardData : public ISerializable,
     virtual void serialize(ISerializationTarget&) override;
 
     ScoredPoint point;
-    GameState state;
+    BridgeCrossingTypes::GameState state;
     unsigned int playerNumber;
     QVector<PlayerData> playerData;
 

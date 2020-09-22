@@ -4,24 +4,22 @@ QT -= gui
 ! include (../common.pri)
 CONFIG += qt console warn_on depend_includepath testcase
 CONFIG -= app_bundle
-CONFIG += link_prl
-TARGET = TEST
+
+TARGET = test
 TEMPLATE = app
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../access/release/ -lACCESS
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../access/debug/ -lACCESS
-else:unix: LIBS += -L$$OUT_PWD/../access/ -lACCESS
+# Library linking
 
-INCLUDEPATH += $$PWD/../access
-DEPENDPATH += $$PWD/../access
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../logic/release/ -llogic
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../logic/debug/ -llogic
-else:unix: LIBS += -L$$OUT_PWD/../logic/ -llogic
-
-INCLUDEPATH += $$PWD/../logic
-DEPENDPATH += $$PWD/../logic
 
 
 SOURCES += \
     BridgeCrossingPlayerTest.cpp
+
+
+unix|win32: LIBS += -L$$OUT_PWD/../logic/ -llogic
+
+INCLUDEPATH += $$PWD/../logic
+DEPENDPATH += $$PWD/../logic
+
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../logic/logic.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../logic/liblogic.a

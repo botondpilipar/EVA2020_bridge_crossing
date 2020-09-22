@@ -14,5 +14,6 @@ SUBDIRS += view \
             common \
             test \
 
-INCLUDEPATH += $$PWD/access
-DEPENDPATH += $$PWD/access
+test.depends = logic
+logic.depends = access
+logic.depends = common

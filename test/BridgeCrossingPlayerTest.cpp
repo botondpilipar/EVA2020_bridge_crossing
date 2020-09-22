@@ -1,5 +1,6 @@
 #include <QtTest>
 #include <BridgeCrossingPlayer.h>
+#include <QSignalSpy>
 // add necessary includes here
 
 using namespace kd417d::eva::logic;
@@ -7,13 +8,16 @@ using namespace kd417d::eva::logic;
 class BridgeCrossingPlayerTest : public QObject
 {
     Q_OBJECT
+    static constexpr int testIdentifier = 1;
 
 public:
-    BridgeCrossingPlayerTest() : player() {}
+    BridgeCrossingPlayerTest() : identifier(testIdentifier),
+        playerWithId(nullptr) {}
     ~BridgeCrossingPlayerTest() = default;
 
 private slots:
-    void testContruction();
+    void initTestCase();
+    void cleanupTestCase();
     void testPlayerId();
     void testPerformAction();
     void testThrowOnMove();
@@ -23,20 +27,41 @@ private slots:
     void testSettingsChangedInteraction();
 
 private:
-    BridgeCrossingPlayer player;
+    int identifier;
+    std::unique_ptr<BridgeCrossingPlayer> playerWithId;
 };
 
-void BridgeCrossingPlayerTest::testContruction()
+void BridgeCrossingPlayerTest::initTestCase()
+{
+    playerWithId = std::unique_ptr<BridgeCrossingPlayer>(new BridgeCrossingPlayer(identifier));
+
+}
+void BridgeCrossingPlayerTest::cleanupTestCase()
 {
 
 }
+
 void BridgeCrossingPlayerTest::testPlayerId()
 {
-
+    QCOMPARE(testIdentifier, playerWithId->getUniqueId());
+    QCOMPARE(0, BridgeCrossingPlayer().getUniqueId());
 }
 void BridgeCrossingPlayerTest::testPerformAction()
 {
+    qRegisterMetaType<BridgeCrossingTypes::PlayerActionSet>();
+    QSignalSpy crossSpy(playerWithId.get(), SIGNAL(actionPerformedSignal(PlayerActionSet)));
+    QVERIFY(crossSpy.isValid());
 
+    playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::CROSS);
+    playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::CROSS);
+    playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::RETURN);
+    QCOMPARE(crossSpy.count(), 3);
+    QCOMPARE(qvariant_cast<BridgeCrossingTypes::PlayerActionSet>(crossSpy.takeFirst().at(0))
+             , BridgeCrossingTypes::PlayerActionSet::CROSS);
+    QCOMPARE(qvariant_cast<BridgeCrossingTypes::PlayerActionSet>(crossSpy.takeFirst().at(0))
+             , BridgeCrossingTypes::PlayerActionSet::CROSS);
+    QCOMPARE(qvariant_cast<BridgeCrossingTypes::PlayerActionSet>(crossSpy.takeFirst().at(0))
+             , BridgeCrossingTypes::PlayerActionSet::RETURN);
 }
 void BridgeCrossingPlayerTest::testThrowOnMove()
 {

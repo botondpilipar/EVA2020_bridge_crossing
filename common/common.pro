@@ -2,8 +2,8 @@
 
 TEMPLATE = lib
 TARGET = common
-DEFINES = common_library
-CONFIG += create_prl
+DEFINES = COMMON
+CONFIG += staticlib
 
 INCLUDEPATH += include
 HEADERS += include/SingletonFactory.hpp \

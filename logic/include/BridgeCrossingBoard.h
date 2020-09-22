@@ -19,13 +19,13 @@ class BridgeCrossingBoard : public QObject,
 {
     Q_OBJECT
 
-    Q_PROPERTY(GameState mGameState
+    Q_PROPERTY(BridgeCrossingTypes::GameState mGameState
                READ getGameState);
 public:
     virtual void addPlayer(const BridgeCrossingPlayer& player);
     virtual bool removePlayer(int uniquePlayerId);
     virtual void movePlayer(int uniquePlayerId);
-    virtual GameState getGameState();
+    virtual BridgeCrossingTypes::GameState getGameState();
     virtual void cross();
 
     // IGameBoard
@@ -56,7 +56,7 @@ protected:
     QStateMachine mStateMachine;
 
 protected slots:
-    void onPlayerActionPerformed(PlayerActionSet action);
+    void onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSet action);
 };
 
 }

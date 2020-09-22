@@ -10,9 +10,9 @@ using namespace kd417d::eva;
 using namespace kd417d::eva::logic::bridge;
 
 PlayerData::PlayerData()
-    : state(PlayerState::CROSSING),
+    : state(BridgeCrossingTypes::PlayerState::CROSSING),
       id(SingletonFactory<CachedRandomDevice>::instance().random()),
-      type(PlayerType::SLOW),
+      type(BridgeCrossingTypes::PlayerType::SLOW),
       speed(0)
 {}
 
@@ -20,8 +20,8 @@ void
 PlayerData::serialize(ISerializationTarget& target)
 {
     target.serializeInt(id);
-    target.serializeInt(static_cast<std::underlying_type_t<PlayerState>>(state));
-    target.serializeInt(static_cast<std::underlying_type_t<PlayerState>>(type));
+    target.serializeInt(static_cast<std::underlying_type_t<BridgeCrossingTypes::PlayerState>>(state));
+    target.serializeInt(static_cast<std::underlying_type_t<BridgeCrossingTypes::PlayerState>>(type));
     target.serializeUnsigned(speed);
 }
 
@@ -36,8 +36,8 @@ PlayerData::deserialize(ISerializationSource& source)
     if(id.has_value() && state.has_value() && type.has_value() && speed.has_value())
     {
         this->id = id.value();
-        this->state = static_cast<PlayerState>(state.value());
-        this->type = static_cast<PlayerType>(type.value());
+        this->state = static_cast<BridgeCrossingTypes::PlayerState>(state.value());
+        this->type = static_cast<BridgeCrossingTypes::PlayerType>(type.value());
         this->speed = speed.value();
     }
     else

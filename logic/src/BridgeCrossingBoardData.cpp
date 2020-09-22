@@ -9,14 +9,14 @@ using namespace kd417d::eva;
 using namespace kd417d::eva::logic::bridge;
 
 BoardData::BoardData() : point(0),
-    state(GameState::CROSS_SELECTION),
+    state(BridgeCrossingTypes::GameState::CROSS_SELECTION),
     playerNumber(SingletonFactory<BridgeCrossingSettings>::instance().allPlayers()),
     playerData()
 {}
 BoardData::BoardData(QVector<PlayerData>& playerData,
           ScoredPoint point,
           unsigned int playerNumber,
-          GameState state)
+          BridgeCrossingTypes::GameState state)
     : point(point),
       state(state),
       playerNumber(playerNumber),
@@ -65,7 +65,7 @@ BoardData::deserialize(ISerializationSource& source)
     if(point.has_value() && state.has_value() && playerNumber.has_value())
     {
         this->point = point.value();
-        this->state = static_cast<GameState>(state.value());
+        this->state = static_cast<BridgeCrossingTypes::GameState>(state.value());
         this->playerNumber = playerNumber.value();
         std::vector<PlayerData> players(this->playerNumber);
 

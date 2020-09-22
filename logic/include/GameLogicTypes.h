@@ -15,48 +15,61 @@ namespace eva
 {
 namespace logic
 {
-namespace bridge
-{
 
-enum struct BoardActionSet : int
+class BridgeCrossingTypes : public QObject
 {
-    SELECT_TO_CROSS,
-    DESELECT_TO_CROSS,
-    CROSS,
-    SELECT_TO_RETURN,
-    DESELECT_TO_RETURN,
-    RETURN
+    Q_OBJECT
+
+public:
+    enum class BoardActionSet : int
+    {
+
+        SELECT_TO_CROSS,
+        DESELECT_TO_CROSS,
+        CROSS,
+        SELECT_TO_RETURN,
+        DESELECT_TO_RETURN,
+        RETURN
+    };
+
+    enum class PlayerState : int
+    {
+        CROSSING,
+        RETURNING,
+        ON_CROSSING_SIDE,
+        ON_RETURNING_SIDE
+    };
+
+    enum class PlayerType : int
+    {
+        SLOW,
+        MEDIUM,
+        FAST
+    };
+
+    enum class GameState : int
+    {
+        CROSS_SELECTION,
+        RETURN_SELECTION
+    };
+
+    enum class PlayerActionSet : int
+    {
+        MOVE_TO_BRIDGE,
+        CROSS,
+        RETURN
+    };
+
+    Q_ENUM(BoardActionSet)
+    Q_ENUM(PlayerState)
+    Q_ENUM(PlayerType)
+    Q_ENUM(GameState)
+    Q_ENUM(PlayerActionSet)
+
 };
 
-enum struct PlayerState : int
-{
-    CROSSING,
-    RETURNING,
-    ON_CROSSING_SIDE,
-    ON_RETURNING_SIDE
-};
 
-enum struct PlayerType : int
-{
-    SLOW,
-    MEDIUM,
-    FAST
-};
 
-enum struct GameState : int
-{
-    CROSS_SELECTION,
-    RETURN_SELECTION
-};
-
-enum struct PlayerActionSet : int
-{
-    MOVE_TO_BRIDGE,
-    CROSS,
-    RETURN
-};
-
-}
 }
 }
 }

@@ -4,10 +4,25 @@ QT += core
 
 TEMPLATE = lib
 TARGET = logic
-DEFINES = logic_library
-CONFIG += create_prl
-CONFIG += link_prl
-INCLUDEPATH += include
+DEFINES = LOGIC
+
+CONFIG += staticlib
+
+unix|win32: LIBS += -L$$OUT_PWD/../access/ -laccess
+
+INCLUDEPATH += $$PWD/../access
+DEPENDPATH += $$PWD/../access
+
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../access/access.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../access/libaccess.a
+
+unix|win32: LIBS += -L$$OUT_PWD/../common/ -lcommon
+
+INCLUDEPATH += $$PWD/../common
+DEPENDPATH += $$PWD/../common
+
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../common/common.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../common/libcommon.a
 
 HEADERS += \
     include/BridgeCrossingBoard.h \
@@ -29,16 +44,5 @@ SOURCES += \
     src/BridgeCrossingPlayerData.cpp
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../access/release/ -lACCESS
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../access/debug/ -lACCESS
-else:unix: LIBS += -L$$OUT_PWD/../access/ -lACCESS
 
-INCLUDEPATH += $$PWD/../access
-DEPENDPATH += $$PWD/../access
 
-#win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../common/release/ -lcommon
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../common/debug/ -lcommon
-#else:unix: LIBS += -L$$OUT_PWD/../common/ -lcommon
-
-#INCLUDEPATH += $$PWD/../common
-#DEPENDPATH += $$PWD/../common

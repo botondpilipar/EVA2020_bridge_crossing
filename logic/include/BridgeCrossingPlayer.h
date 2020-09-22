@@ -14,21 +14,29 @@ namespace logic
 using namespace bridge;
 
 class BridgeCrossingPlayer : public QObject,
-                             public IGameActor<PlayerData, PlayerActionSet>
+                             public IGameActor<PlayerData, BridgeCrossingTypes::PlayerActionSet>
 {
     Q_OBJECT;
 
     Q_PROPERTY(PlayerState mState
                READ getPlayerState)
+    Q_PROPERTY(int mUniqueId
+               READ getUniqueId)
 public:
     virtual ~BridgeCrossingPlayer() override = default;
     BridgeCrossingPlayer() = default;
     BridgeCrossingPlayer(int uniqueId) {}
-    PlayerState getPlayerState() { return PlayerState::CROSSING; }
+    BridgeCrossingTypes::PlayerState getPlayerState()
+    {
+        return BridgeCrossingTypes::PlayerState::CROSSING;
+    }
 
     // IGameActor
-    virtual void performAction(PlayerActionSet action) override;
-    virtual int getUniqueId() override;
+    virtual void performAction(BridgeCrossingTypes::PlayerActionSet action) override;
+    virtual int getUniqueId() override
+    {
+        return mUniqueId;
+    }
 
     // IMovableObject
     virtual void move(QPair<int, int> newPosition) override;
@@ -42,7 +50,10 @@ public:
 
     virtual void settingsChanged() override;
 signals:
-    void actionPerformedSignal(PlayerActionSet action);
+    void actionPerformedSignal(BridgeCrossingTypes::PlayerActionSet action);
+
+private:
+    int mUniqueId;
 };
 
 }

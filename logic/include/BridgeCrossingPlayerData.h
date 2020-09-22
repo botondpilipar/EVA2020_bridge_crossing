@@ -24,12 +24,15 @@ struct PlayerData : public ISerializable, public IDeserializable
 
     PlayerData();
 
-    PlayerData(PlayerState state, Identifier id, PlayerType type, CrossSpeed speed)
+    PlayerData(BridgeCrossingTypes::PlayerState state,
+               Identifier id,
+               BridgeCrossingTypes::PlayerType type,
+               CrossSpeed speed)
         : state(state), id(id), type(type), speed(speed) {}
 
-    PlayerState state;
+    BridgeCrossingTypes::PlayerState state;
     Identifier id;
-    PlayerType type;
+    BridgeCrossingTypes::PlayerType type;
     CrossSpeed speed;
 
     virtual void deserialize(ISerializationSource&) override;
