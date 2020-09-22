@@ -14,11 +14,13 @@ class BridgeCrossingSettingDefaults
 {
 public:
     static constexpr unsigned int slowPlayerNumber = 3;
-    static constexpr unsigned int mediumPlayerNumber = 3;
-    static constexpr unsigned int fastPlayerNumber = 3;
+    static constexpr unsigned int mediumPlayerNumber = 2;
+    static constexpr unsigned int fastPlayerNumber = 1;
     static constexpr unsigned int slowPlayerCrossSpeed = 12;
     static constexpr unsigned int mediumPlayerCrossSpeed = 8;
     static constexpr unsigned int fastPlayerCrossSpeed = 4;
+
+
 };
 
 class BridgeCrossingSettings : public QObject
@@ -63,6 +65,11 @@ signals:
     void notifyFastPlayerCrossTimePropertyChanged();
 
 public:
+
+    constexpr inline unsigned int allPlayers() noexcept { return mSlowPlayerNumber
+                                                      + mMediumPlayerNumber
+                                                      + mFastPlayerNumber; }
+
     unsigned int getSlowPlayerNumber() { return mSlowPlayerCrossTime; }
     void setSlowPlayerNumber(unsigned int newPlayerNumber)
     {

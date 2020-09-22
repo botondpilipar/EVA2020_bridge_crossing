@@ -4,7 +4,9 @@
 #include <common_pch.h>
 #include <IDataInitializable.hpp>
 #include <ISerializable.h>
+
 #include "ISettingsChangedObserver.h"
+#include "GameLogicTypes.h"
 
 namespace kd417d
 {
@@ -16,7 +18,7 @@ namespace logic
 using namespace kd417d::eva::access;
 
 template<class DataReprType,
-         std::enable_if<
+         class = typename std::enable_if<
              std::is_base_of<ISerializable, DataReprType>::value>>
 class IMovableObject : public IDataInitializable<DataReprType>,
                        public ISettingsChangedObserver
@@ -27,7 +29,6 @@ public:
 
     virtual void move(QPair<int, int> newPosition) = 0;
     virtual QPair<int, int> getPositionOnBoard() = 0;
-    virtual long getObjectId() = 0;
 
 };
 
