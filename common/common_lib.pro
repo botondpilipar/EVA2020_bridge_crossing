@@ -2,4 +2,5 @@
 
 TEMPLATE = lib
 DEFINES = COMMON_LIBRARY
-HEADERS += include/SingletonFactory.hpp
+HEADERS += include/SingletonFactory.hpp \
+            include/UnimplementedException

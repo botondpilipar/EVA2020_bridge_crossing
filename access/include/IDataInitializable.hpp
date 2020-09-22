@@ -1,7 +1,7 @@
 #ifndef IDATAINITIALIZABLE_HPP
 #define IDATAINITIALIZABLE_HPP
 
-#endif // IDATAINITIALIZABLE_HPP
+
 namespace kd417d
 {
 namespace eva
@@ -22,3 +22,4 @@ public:
 }
 }
 }
+#endif // IDATAINITIALIZABLE_HPP

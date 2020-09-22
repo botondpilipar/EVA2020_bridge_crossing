@@ -1,8 +1,7 @@
 #ifndef DESERIALIZATIONFAILEDEXCEPTION_H
 #define DESERIALIZATIONFAILEDEXCEPTION_H
 
-#include <QException>
-#include <string.h>
+#include <common_pch.h>
 
 namespace kd417d
 {
@@ -14,21 +13,23 @@ namespace access
 class DeserializationFailedException : public std::exception
 {
 public:
-    virtual ~DeserializationFailedException() override = default;
     DeserializationFailedException(std::string objectName) :
-        objectFailed(objectName) {}
+        mObjectFailed(objectName),
+        mMessage(new char[150]){}
+
+    virtual ~DeserializationFailedException() override = default;
 
     virtual const char* what() const noexcept override
     {
-        char* buffer = new char[100];
-        snprintf(buffer, sizeof(buffer),
+        snprintf(mMessage.get(), sizeof(mMessage.get()),
                  "Failed to initialize %s, fallback to default value",
-                 objectFailed.c_str());
-        return buffer;
+                 mObjectFailed.c_str());
+        return mMessage.get();
     }
 
 private:
-    std::string objectFailed;
+    std::string mObjectFailed;
+    std::unique_ptr<char> mMessage;
 };
 
 }
