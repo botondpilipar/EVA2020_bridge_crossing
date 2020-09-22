@@ -26,6 +26,7 @@ public:
     virtual std::optional<double> deserializeDouble() = 0;
     virtual std::optional<std::string> deserializeString() = 0;
     virtual std::optional<char> deserializeChar() = 0;
+    virtual std::optional<unsigned int> deserializeUnsigned() = 0;
 
 };
 

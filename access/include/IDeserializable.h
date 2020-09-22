@@ -12,6 +12,7 @@ class ISerializationSource;
 
 class IDeserializable
 {
+public:
     virtual ~IDeserializable() = default;
     IDeserializable() = default;
 

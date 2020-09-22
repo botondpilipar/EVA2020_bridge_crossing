@@ -23,6 +23,7 @@ public:
     virtual std::optional<double> deserializeDouble() override;
     virtual std::optional<std::string> deserializeString() override;
     virtual std::optional<char> deserializeChar() override;
+    virtual std::optional<unsigned int> deserializeUnsigned() override;
 
     virtual inline std::istream& getUnderlyingStream() { return mStream; }
 protected:

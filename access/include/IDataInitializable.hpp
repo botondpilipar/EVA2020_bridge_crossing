@@ -11,11 +11,12 @@ namespace access
 template<class DataReprType>
 class IDataInitializable
 {
+public:
     virtual ~IDataInitializable() = default;
     IDataInitializable() = default;
 
-    void initialize(const DataReprType& representation) = 0;
-    DataReprType* save() = 0;
+    virtual void initialize(const DataReprType& representation) = 0;
+    virtual DataReprType* save() = 0;
 };
 
 }

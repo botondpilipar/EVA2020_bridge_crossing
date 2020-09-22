@@ -32,3 +32,8 @@ StreamSerializationSource::deserializeChar()
 {
     return readAny<char>();
 }
+std::optional<unsigned int>
+StreamSerializationSource::deserializeUnsigned()
+{
+    return readAny<unsigned>();
+}

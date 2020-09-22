@@ -12,6 +12,7 @@ class ISerializationTarget;
 
 class ISerializable
 {
+public:
     virtual ~ISerializable() = default;
     ISerializable() = default;
 

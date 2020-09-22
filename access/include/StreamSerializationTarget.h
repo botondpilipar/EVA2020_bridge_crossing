@@ -17,12 +17,13 @@ class StreamSerializationTarget : public ISerializationTarget
 {
 public:
     StreamSerializationTarget(std::ostream& stream) : mStream(stream) {}
-    virtual void serializeInt(int&) override;
-    virtual void serializeFloat(float&) override;
-    virtual void serializeBool(bool&) override;
-    virtual void serializeDouble(double&) override;
-    virtual void serializeChar(char&) override;
-    virtual void serializeString(std::string&) override;
+    virtual void serializeInt(int) override;
+    virtual void serializeFloat(float) override;
+    virtual void serializeBool(bool) override;
+    virtual void serializeDouble(double) override;
+    virtual void serializeChar(char) override;
+    virtual void serializeString(std::string) override;
+    virtual void serializeUnsigned(unsigned int) override;
     virtual inline std::ostream& getUnderlyingStream() { return mStream; }
 protected:
     template<class T>

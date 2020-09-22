@@ -18,12 +18,13 @@ public:
     virtual ISerializationTarget& operator=(ISerializationTarget&&) = delete;
     virtual ISerializationTarget& operator=(ISerializationTarget&) = delete;
 
-    virtual void serializeInt(int&) = 0;
-    virtual void serializeFloat(float&) = 0;
-    virtual void serializeBool(bool&) = 0;
-    virtual void serializeDouble(double&) = 0;
-    virtual void serializeChar(char&) = 0;
-    virtual void serializeString(std::string&) = 0;
+    virtual void serializeInt(int) = 0;
+    virtual void serializeFloat(float) = 0;
+    virtual void serializeBool(bool) = 0;
+    virtual void serializeDouble(double) = 0;
+    virtual void serializeChar(char) = 0;
+    virtual void serializeString(std::string) = 0;
+    virtual void serializeUnsigned(unsigned int) = 0;
 };
 
 }
