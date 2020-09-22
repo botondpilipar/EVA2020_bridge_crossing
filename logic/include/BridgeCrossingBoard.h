@@ -13,8 +13,8 @@ namespace logic
 {
 using namespace bridge;
 
-class BridgeCrossingBoard : public IGameBoard<BoardData>,
-                            public QObject
+class BridgeCrossingBoard : public QObject,
+                            public IGameBoard<BoardData>
 {
     Q_OBJECT;
 public:
