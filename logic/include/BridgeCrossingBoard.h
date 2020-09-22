@@ -39,8 +39,9 @@ signals:
     void newPlayerAddedSignal(BridgeCrossingPlayer& newPlayer);
 
 protected:
-    QVector<BridgeCrossingPlayer> mPlayers;
+    QList<BridgeCrossingPlayer*> mPlayers;
     QList<ISettingsChangedObserver*> mSettingsChangedObservers;
+    QMap<int, BridgeCrossingPlayer> mPlayerIdMap;
     ScoredPoint mTimeElapsed;
     QStateMachine mStateMachine;
 
