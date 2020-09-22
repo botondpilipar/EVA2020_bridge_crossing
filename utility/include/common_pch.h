@@ -12,6 +12,9 @@
 #include <numeric>
 #include <limits>
 #include <filesystem>
+#include <random>
+#include <unordered_set>
+#include <limits>
 
 // Qt includes
 #include <QObject>

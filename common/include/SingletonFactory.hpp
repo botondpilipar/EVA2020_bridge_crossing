@@ -17,15 +17,17 @@ public:
     }
     static void deleteFactory() { delete mSingletonInstance; }
     static bool isFactorySet() { return mSingletonInstance != nullptr; }
-    static T* instance()
+    static T& instance()
     {
         assert(mSingletonInstance != nullptr);
-        return mSingletonInstance;
+        return *mSingletonInstance;
     }
-private:
+protected:
     static T* mSingletonInstance;
 };
 
+template<class T>
+T* SingletonFactory<T>::mSingletonInstance = nullptr;
 }
 }
 #endif // SINGLETONFACTORY_HPP
