@@ -14,7 +14,8 @@ namespace logic
 template<class DataReprType,
          class = typename std::enable_if<
              std::is_base_of<ISerializable, DataReprType>::value>>
-class IGameBoard : public IGameControlUnit
+class IGameBoard : public IGameControlUnit,
+                   public IDataInitializable<DataReprType>
 {
 public:
     virtual Dimension2D getDimensions() = 0;

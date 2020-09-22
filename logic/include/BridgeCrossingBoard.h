@@ -3,6 +3,7 @@
 
 #include "IGameBoard.h"
 #include "BridgeCrossingBoardData.h"
+#include "BridgeCrossingPlayer.h"
 
 namespace kd417d
 {
@@ -12,16 +13,39 @@ namespace logic
 {
 using namespace bridge;
 
-class BridgeCrossingBoard : public IGameBoard<BoardData>
+class BridgeCrossingBoard : public IGameBoard<BoardData>,
+                            public QObject
 {
+    Q_OBJECT;
+public:
+    virtual void addPlayer(const BridgeCrossingPlayer& player);
+    virtual bool removePlayer(int uniquePlayerId);
 
-
+    // IGameBoard
     virtual Dimension2D getDimensions() override;
     virtual void setDimensions(Dimension2D&) override;
+
+    // IGameControlUnit
     virtual void startNewGame() override;
     virtual void pauseGame() override;
     virtual void continueGame() override;
+
+    // ISettingsChangedObserver
     virtual void settingsChanged() override;
+
+signals:
+    void scoredPointChangedSignal(ScoredPoint newScore);
+    void gameOverSignal(ScoredPoint finalScore);
+    void newPlayerAddedSignal(BridgeCrossingPlayer& newPlayer);
+
+protected:
+    QVector<BridgeCrossingPlayer> mPlayers;
+    QList<ISettingsChangedObserver*> mSettingsChangedObservers;
+    ScoredPoint mTimeElapsed;
+    QStateMachine mStateMachine;
+
+protected slots:
+    void onPlayerActionPerformed(PlayerActionSet action);
 };
 
 }

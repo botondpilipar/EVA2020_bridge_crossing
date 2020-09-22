@@ -13,11 +13,17 @@ namespace logic
 {
 using namespace bridge;
 
-class BridgeCrossingPlayer : public IGameActor<PlayerData, PlayerActionSet>
+class BridgeCrossingPlayer : public QObject,
+                             public IGameActor<PlayerData, PlayerActionSet>
 {
+    Q_OBJECT;
+
+    Q_PROPERTY(PlayerState mState
+               READ getPlayerState)
 public:
     virtual ~BridgeCrossingPlayer() override = default;
     BridgeCrossingPlayer();
+    inline PlayerState getPlayerState();
 
     // IGameActor
     virtual void performAction(PlayerActionSet action) override;
@@ -31,7 +37,11 @@ public:
     virtual void initialize(const PlayerData& representation) override;
     virtual PlayerData* save() override;
 
+    // ISettingsChangedObserver
 
+    virtual void settingsChanged() override;
+signals:
+    void actionPerformedSignal(PlayerActionSet action);
 };
 
 }
