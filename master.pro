@@ -11,5 +11,8 @@ INCLUDEPATH += logic/include \
 SUBDIRS += view \
             logic \
             access \
+            common \
             test \
 
+INCLUDEPATH += $$PWD/access
+DEPENDPATH += $$PWD/access

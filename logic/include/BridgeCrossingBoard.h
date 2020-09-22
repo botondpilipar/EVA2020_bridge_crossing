@@ -4,6 +4,7 @@
 #include "IGameBoard.h"
 #include "BridgeCrossingBoardData.h"
 #include "BridgeCrossingPlayer.h"
+#include "GameLogicTypes.h"
 
 namespace kd417d
 {
@@ -16,10 +17,16 @@ using namespace bridge;
 class BridgeCrossingBoard : public QObject,
                             public IGameBoard<BoardData>
 {
-    Q_OBJECT;
+    Q_OBJECT
+
+    Q_PROPERTY(GameState mGameState
+               READ getGameState);
 public:
     virtual void addPlayer(const BridgeCrossingPlayer& player);
     virtual bool removePlayer(int uniquePlayerId);
+    virtual void movePlayer(int uniquePlayerId);
+    virtual GameState getGameState();
+    virtual void cross();
 
     // IGameBoard
     virtual Dimension2D getDimensions() override;
@@ -35,8 +42,11 @@ public:
 
 signals:
     void scoredPointChangedSignal(ScoredPoint newScore);
-    void gameOverSignal(ScoredPoint finalScore);
     void newPlayerAddedSignal(BridgeCrossingPlayer& newPlayer);
+    void playerMovedSignal(const BridgeCrossingPlayer&);
+    void gameOverSignal(ScoredPoint finalScore);
+    void newGameSignal();
+    void boardChangedSignal(const QMap<int, BridgeCrossingPlayer>&);
 
 protected:
     QList<BridgeCrossingPlayer*> mPlayers;

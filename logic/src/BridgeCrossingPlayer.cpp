@@ -3,11 +3,6 @@
 
 using namespace kd417d::eva::logic;
 
-PlayerState BridgeCrossingPlayer::getPlayerState()
-{
-    return PlayerState::CROSSING;
-}
-
 // IGameActor
  void BridgeCrossingPlayer::performAction(PlayerActionSet action)
  {

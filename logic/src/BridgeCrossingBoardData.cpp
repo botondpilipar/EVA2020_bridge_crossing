@@ -75,3 +75,9 @@ BoardData::deserialize(ISerializationSource& source)
         }
     }
 }
+
+void
+BoardData::serialize(ISerializationTarget& target)
+{
+    return;
+}

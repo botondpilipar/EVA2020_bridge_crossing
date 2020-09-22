@@ -22,8 +22,9 @@ class BridgeCrossingPlayer : public QObject,
                READ getPlayerState)
 public:
     virtual ~BridgeCrossingPlayer() override = default;
-    BridgeCrossingPlayer();
-    inline PlayerState getPlayerState();
+    BridgeCrossingPlayer() = default;
+    BridgeCrossingPlayer(int uniqueId) {}
+    PlayerState getPlayerState() { return PlayerState::CROSSING; }
 
     // IGameActor
     virtual void performAction(PlayerActionSet action) override;
