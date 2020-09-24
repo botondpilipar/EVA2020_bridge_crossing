@@ -5,7 +5,7 @@
 #include <IDeserializable.h>
 #include <DeserializationFailedException.h>
 
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -38,6 +38,8 @@ struct PlayerData : public ISerializable, public IDeserializable
     virtual void deserialize(ISerializationSource&) override;
 
     virtual void serialize(ISerializationTarget&) override;
+
+    bool operator==(const PlayerData& other) const;
 };
 
 }

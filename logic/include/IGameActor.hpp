@@ -20,7 +20,7 @@ public:
     IGameActor() = default;
 
     virtual void performAction(ActionSet action) = 0;
-    virtual int getUniqueId() = 0;
+    virtual int getUniqueId() const = 0;
 
 };
 

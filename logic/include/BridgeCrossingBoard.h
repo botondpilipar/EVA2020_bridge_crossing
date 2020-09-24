@@ -4,7 +4,7 @@
 #include "IGameBoard.h"
 #include "BridgeCrossingBoardData.h"
 #include "BridgeCrossingPlayer.h"
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -21,15 +21,18 @@ class BridgeCrossingBoard : public QObject,
 
     Q_PROPERTY(BridgeCrossingTypes::GameState mGameState
                READ getGameState);
+    Q_PROPERTY(ScoredPoint mTimeEllapsed
+               READ getTimeEllapsed)
 public:
     virtual void addPlayer(const BridgeCrossingPlayer& player);
-    virtual bool removePlayer(int uniquePlayerId);
     virtual void movePlayer(int uniquePlayerId);
     virtual BridgeCrossingTypes::GameState getGameState();
     virtual void cross();
+    virtual BridgeCrossingTypes::GameState getGameState() const;
+    virtual ScoredPoint getTimeEllapsed() const;
 
     // IGameBoard
-    virtual Dimension2D getDimensions() override;
+    virtual Dimension2D getDimensions() const override;
     virtual void setDimensions(Dimension2D&) override;
 
     // IGameControlUnit
@@ -52,7 +55,7 @@ protected:
     QList<BridgeCrossingPlayer*> mPlayers;
     QList<ISettingsChangedObserver*> mSettingsChangedObservers;
     QMap<int, BridgeCrossingPlayer> mPlayerIdMap;
-    ScoredPoint mTimeElapsed;
+    ScoredPoint mTimeEllapsed;
     QStateMachine mStateMachine;
 
 protected slots:

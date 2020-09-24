@@ -1,7 +1,7 @@
 #include <BridgeCrossingPlayerData.h>
 #include <ISerializationTarget.h>
 #include <ISerializationSource.h>
-#include <GameLogicTypes.h>
+#include <BridgeCrossingTypes.h>
 #include <DeserializationFailedException.h>
 #include <CachedRandomDevice.h>
 #include <SingletonFactory.hpp>
@@ -44,4 +44,13 @@ PlayerData::deserialize(ISerializationSource& source)
     {
         throw DeserializationFailedException("PlayerData");
     }
+}
+
+bool
+PlayerData::operator==(const PlayerData& other) const
+{
+    return other.id == this->id &&
+            other.speed == this->speed &&
+            other.state == this->state &&
+            other.type == this->type;
 }

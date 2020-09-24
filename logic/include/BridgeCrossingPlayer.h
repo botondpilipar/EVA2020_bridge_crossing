@@ -3,7 +3,7 @@
 
 #include "IGameActor.hpp"
 #include "BridgeCrossingPlayerData.h"
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -18,29 +18,35 @@ class BridgeCrossingPlayer : public QObject,
 {
     Q_OBJECT;
 
-    Q_PROPERTY(PlayerState mState
+    Q_PROPERTY(BridgeCrossingTypes::PlayerState mState
                READ getPlayerState)
     Q_PROPERTY(int mUniqueId
                READ getUniqueId)
+    Q_PROPERTY(BridgeCrossingTypes::PlayerType mType
+               READ getPlayerType)
+    Q_PROPERTY(CrossSpeed mCrossSpeed
+               READ getCrossSpeed)
 public:
     virtual ~BridgeCrossingPlayer() override = default;
     BridgeCrossingPlayer() = default;
     BridgeCrossingPlayer(int uniqueId) {}
-    BridgeCrossingTypes::PlayerState getPlayerState()
-    {
-        return BridgeCrossingTypes::PlayerState::CROSSING;
-    }
+
+    inline BridgeCrossingTypes::PlayerState getPlayerState() const { return mState; }
+
+    inline BridgeCrossingTypes::PlayerType getPlayerType() const { return mType; }
+
+    inline CrossSpeed getCrossSpeed() const { return mCrossSpeed; }
 
     // IGameActor
     virtual void performAction(BridgeCrossingTypes::PlayerActionSet action) override;
-    virtual int getUniqueId() override
+    virtual int getUniqueId() const override
     {
         return mUniqueId;
     }
 
     // IMovableObject
     virtual void move(QPair<int, int> newPosition) override;
-    virtual QPair<int, int> getPositionOnBoard() override;
+    virtual QPair<int, int> getPositionOnBoard() const override;
 
     // IDataInitializable
     virtual void initialize(const PlayerData& representation) override;
@@ -54,6 +60,9 @@ signals:
 
 private:
     int mUniqueId;
+    BridgeCrossingTypes::PlayerState mState;
+    BridgeCrossingTypes::PlayerType mType;
+    CrossSpeed mCrossSpeed;
 };
 
 }

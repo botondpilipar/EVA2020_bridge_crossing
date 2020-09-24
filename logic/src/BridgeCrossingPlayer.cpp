@@ -13,7 +13,7 @@ using namespace kd417d::eva::logic;
 // IMovableObject
  void
  BridgeCrossingPlayer::move(QPair<int, int>) {}
- QPair<int, int> BridgeCrossingPlayer::getPositionOnBoard()
+ QPair<int, int> BridgeCrossingPlayer::getPositionOnBoard() const
  {
      throw UnimplementedException("BridgeCrossingPlayer", "getPositionOnBoard");
  }

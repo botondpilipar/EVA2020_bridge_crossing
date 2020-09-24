@@ -6,7 +6,7 @@
 #include <ISerializable.h>
 
 #include "ISettingsChangedObserver.h"
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -28,7 +28,7 @@ public:
     IMovableObject() = default;
 
     virtual void move(QPair<int, int> newPosition) = 0;
-    virtual QPair<int, int> getPositionOnBoard() = 0;
+    virtual QPair<int, int> getPositionOnBoard() const = 0;
 
 };
 

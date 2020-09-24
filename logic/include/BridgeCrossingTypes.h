@@ -21,6 +21,9 @@ class BridgeCrossingTypes : public QObject
     Q_OBJECT
 
 public:
+    virtual ~BridgeCrossingTypes() override = default;
+    BridgeCrossingTypes() = default;
+
     enum class BoardActionSet : int
     {
 
@@ -67,7 +70,6 @@ public:
     Q_ENUM(PlayerActionSet)
 
 };
-
 
 
 }

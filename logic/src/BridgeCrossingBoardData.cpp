@@ -81,3 +81,12 @@ BoardData::serialize(ISerializationTarget& target)
 {
     return;
 }
+
+bool
+BoardData::operator==(const BoardData& other) const
+{
+    return other.playerNumber == this->playerNumber &&
+            other.point == this->point &&
+            other.state == this->state &&
+            std::equal(other.playerData.begin(), other.playerData.end(), this->playerData.begin());
+}

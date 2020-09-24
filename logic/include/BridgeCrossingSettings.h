@@ -70,7 +70,7 @@ public:
                                                       + mMediumPlayerNumber
                                                       + mFastPlayerNumber; }
 
-    unsigned int getSlowPlayerNumber() { return mSlowPlayerCrossTime; }
+    unsigned int getSlowPlayerNumber() const { return mSlowPlayerCrossTime; }
     void setSlowPlayerNumber(unsigned int newPlayerNumber)
     {
         mSlowPlayerNumber = newPlayerNumber;
@@ -81,7 +81,7 @@ public:
         mSlowPlayerNumber = BridgeCrossingSettingDefaults::slowPlayerNumber;
         emit notifySlowPlayerNumberChanged();
     }
-    unsigned int getSlowPlayerCrossTime() { return mSlowPlayerCrossTime; }
+    unsigned int getSlowPlayerCrossTime() const { return mSlowPlayerCrossTime; }
     void setSlowPlayerCrossTime(unsigned int newCrossTime)
     {
         mSlowPlayerCrossTime = newCrossTime;
@@ -93,7 +93,7 @@ public:
         emit notifySlowPlayerCrossTimePropertyChanged();
     }
 
-    unsigned int getMediumPlayerNumber() { return mMediumPlayerCrossTime; }
+    unsigned int getMediumPlayerNumber() const { return mMediumPlayerCrossTime; }
     void setMediumPlayerNumber(unsigned int newPlayerNumber)
     {
         mMediumPlayerNumber = newPlayerNumber;
@@ -104,7 +104,7 @@ public:
         mMediumPlayerNumber = BridgeCrossingSettingDefaults::mediumPlayerNumber;
         emit notifyMediumPlayerNumberChanged();
     }
-    unsigned int getMediumPlayerCrossTime() { return mMediumPlayerCrossTime; }
+    unsigned int getMediumPlayerCrossTime() const { return mMediumPlayerCrossTime; }
     void setMediumPlayerCrossTime(unsigned int newCrossTime)
     {
         mMediumPlayerCrossTime = newCrossTime;
@@ -116,7 +116,7 @@ public:
         emit notifyMediumPlayerCrossTimePropertyChanged();
     }
 
-    unsigned int getFastPlayerNumber() { return mFastPlayerCrossTime; }
+    unsigned int getFastPlayerNumber() const { return mFastPlayerCrossTime; }
     void setFastPlayerNumber(unsigned int newPlayerNumber)
     {
         mFastPlayerNumber = newPlayerNumber;
@@ -127,7 +127,7 @@ public:
         mFastPlayerNumber = BridgeCrossingSettingDefaults::fastPlayerNumber;
         emit notifyFastPlayerNumberChanged();
     }
-    unsigned int getFastPlayerCrossTime() { return mFastPlayerCrossTime; }
+    unsigned int getFastPlayerCrossTime() const { return mFastPlayerCrossTime; }
     void setFastPlayerCrossTime(unsigned int newCrossTime)
     {
         mFastPlayerCrossTime = newCrossTime;

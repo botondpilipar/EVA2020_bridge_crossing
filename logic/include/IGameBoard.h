@@ -2,7 +2,7 @@
 #define IGAMEBOARD_H
 
 #include "IGameControlUnit.h"
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -18,7 +18,7 @@ class IGameBoard : public IGameControlUnit,
                    public IDataInitializable<DataReprType>
 {
 public:
-    virtual Dimension2D getDimensions() = 0;
+    virtual Dimension2D getDimensions() const = 0;
     virtual void setDimensions(Dimension2D&) = 0;
 };
 }

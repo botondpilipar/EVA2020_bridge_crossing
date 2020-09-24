@@ -4,7 +4,7 @@
 #include <common_pch.h>
 #include <ISerializable.h>
 #include <IDeserializable.h>
-#include "GameLogicTypes.h"
+#include "BridgeCrossingTypes.h"
 
 namespace kd417d
 {
@@ -40,6 +40,8 @@ struct BoardData : public ISerializable,
     virtual void deserialize(ISerializationSource&) override;
 
     virtual void serialize(ISerializationTarget&) override;
+
+    bool operator==(const BoardData& other) const;
 
     ScoredPoint point;
     BridgeCrossingTypes::GameState state;

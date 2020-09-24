@@ -23,14 +23,15 @@ BridgeCrossingBoard::getGameState()
 
 void
 BridgeCrossingBoard::addPlayer(const BridgeCrossingPlayer& player){}
-bool
-BridgeCrossingBoard::removePlayer(int uniquePlayerId){}
-
 
 Dimension2D
-BridgeCrossingBoard::getDimensions() {}
+BridgeCrossingBoard::getDimensions() const {}
+
 void
 BridgeCrossingBoard::setDimensions(Dimension2D&) {}
+
+BridgeCrossingTypes::GameState BridgeCrossingBoard::getGameState() const {}
+ScoredPoint BridgeCrossingBoard::getTimeEllapsed() const {}
 
 void
 BridgeCrossingBoard::startNewGame() {}
