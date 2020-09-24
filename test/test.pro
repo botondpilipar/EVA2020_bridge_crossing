@@ -1,4 +1,5 @@
 QT += testlib
+QT += core
 QT -= gui
 
 ! include (../common.pri)
@@ -16,10 +17,18 @@ SOURCES += \
     BridgeCrossingPlayerTest.cpp
 
 
+
 unix|win32: LIBS += -L$$OUT_PWD/../logic/ -llogic
 
 INCLUDEPATH += $$PWD/../logic
 DEPENDPATH += $$PWD/../logic
 
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../logic/logic.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../logic/liblogic.a
+unix|win32: LIBS += -L$$OUT_PWD/../common/ -lcommon
+
+INCLUDEPATH += $$PWD/../common
+DEPENDPATH += $$PWD/../common
+
+unix|win32: LIBS += -L$$OUT_PWD/../access/ -laccess
+
+INCLUDEPATH += $$PWD/../access
+DEPENDPATH += $$PWD/../access

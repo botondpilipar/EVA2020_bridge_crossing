@@ -5,7 +5,6 @@ QT += core
 TEMPLATE = lib
 TARGET = access
 DEFINES = ACCESS
-CONFIG += staticlib
 
 INCLUDEPATH += include
 HEADERS += include/ISerializable.h \
