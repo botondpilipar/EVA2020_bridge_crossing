@@ -1,9 +1,16 @@
+// Qt Library Includes
 #include <QtTest>
-#include <BridgeCrossingPlayer.h>
 #include <QSignalSpy>
-// add necessary includes here
+#include <cstring>
 
+// Local library includes
+#include <UnimplementedException.h>
+#include <BridgeCrossingPlayer.h>
+
+
+using namespace kd417d::eva;
 using namespace kd417d::eva::logic;
+using namespace kd417d::eva::access;
 
 class BridgeCrossingPlayerTest : public QObject
 {
@@ -12,7 +19,10 @@ class BridgeCrossingPlayerTest : public QObject
 
 public:
     BridgeCrossingPlayerTest() : identifier(testIdentifier),
-        playerWithId(nullptr) {}
+        playerWithId(nullptr)
+    {
+        qRegisterMetaType<BridgeCrossingTypes::PlayerActionSet>("BridgeCrossingTypes::PlayerActionSet");
+    }
     ~BridgeCrossingPlayerTest() = default;
 
 private slots:
@@ -24,7 +34,6 @@ private slots:
     void testThrowOnBoardPosition();
     void testDataInitialization();
     void testDataSave();
-    void testSettingsChangedInteraction();
 
 private:
     int identifier;
@@ -48,13 +57,15 @@ void BridgeCrossingPlayerTest::testPlayerId()
 }
 void BridgeCrossingPlayerTest::testPerformAction()
 {
-    qRegisterMetaType<BridgeCrossingTypes::PlayerActionSet>();
-    QSignalSpy crossSpy(playerWithId.get(), SIGNAL(actionPerformedSignal(PlayerActionSet)));
+
+
+    QSignalSpy crossSpy(playerWithId.get(), SIGNAL(actionPerformedSignal(BridgeCrossingTypes::PlayerActionSet)));
     QVERIFY(crossSpy.isValid());
 
     playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::CROSS);
     playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::CROSS);
     playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::RETURN);
+
     QCOMPARE(crossSpy.count(), 3);
     QCOMPARE(qvariant_cast<BridgeCrossingTypes::PlayerActionSet>(crossSpy.takeFirst().at(0))
              , BridgeCrossingTypes::PlayerActionSet::CROSS);
@@ -66,25 +77,39 @@ void BridgeCrossingPlayerTest::testPerformAction()
 void BridgeCrossingPlayerTest::testThrowOnMove()
 {
 
+    QVERIFY_EXCEPTION_THROWN(playerWithId->move(QPair(0, 0)), UnimplementedException);
 }
 void BridgeCrossingPlayerTest::testThrowOnBoardPosition()
 {
-
+    QVERIFY_EXCEPTION_THROWN(playerWithId->getPositionOnBoard(), UnimplementedException);
 }
 void BridgeCrossingPlayerTest::testDataInitialization()
 {
+    PlayerData data(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
+                    testIdentifier,
+                    BridgeCrossingTypes::PlayerType::SLOW,
+                    10);
+    playerWithId->initialize(data);
+
+    QCOMPARE(playerWithId->getPlayerState(), BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
+    QCOMPARE(playerWithId->getUniqueId(), 1);
+    QCOMPARE(playerWithId->getPlayerType(), BridgeCrossingTypes::PlayerType::SLOW);
+    QCOMPARE(playerWithId->getCrossSpeed(), 10);
 
 }
 void BridgeCrossingPlayerTest::testDataSave()
 {
+    std::unique_ptr<PlayerData> data(new PlayerData(BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE,
+                    testIdentifier,
+                    BridgeCrossingTypes::PlayerType::FAST,
+                    112));
 
+    playerWithId->initialize(*data);
+    std::unique_ptr<PlayerData> saved(playerWithId->save());
+
+    QVERIFY(*data == *saved);
 }
-void BridgeCrossingPlayerTest::testSettingsChangedInteraction()
-{
 
-}
-
-
-QTEST_APPLESS_MAIN(BridgeCrossingPlayerTest)
+QTEST_APPLESS_MAIN(BridgeCrossingPlayerTest);
 
 #include "BridgeCrossingPlayerTest.moc"

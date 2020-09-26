@@ -2,6 +2,7 @@ WARNINGS += -Wall
 CONFIG += c++17
 CONFIG += warn_on
 QMAKE_CXXFLAGS += -v
+QMAKE_CXXFLAGS += -std=c++1z
 
 top_srcdir=$$PWD
 top_builddir=$$shadowed($$PWD)
