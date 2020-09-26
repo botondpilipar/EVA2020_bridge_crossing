@@ -4,6 +4,7 @@
 #include "IGameActor.hpp"
 #include "BridgeCrossingPlayerData.h"
 #include "BridgeCrossingTypes.h"
+#include <BridgeCrossingSettings.h>
 
 namespace kd417d
 {
@@ -20,8 +21,9 @@ class BridgeCrossingPlayer : public QObject,
 
     Q_PROPERTY(BridgeCrossingTypes::PlayerState mState
                READ getPlayerState
-               NOTIFY notifyStateChanged)
-    Q_PROPERTY(int mUniqueId
+               WRITE setPlayerState
+               NOTIFY notifyStateChangedSignal)
+    Q_PROPERTY(Identifier mUniqueId
                READ getUniqueId)
     Q_PROPERTY(BridgeCrossingTypes::PlayerType mType
                READ getPlayerType)
@@ -29,10 +31,17 @@ class BridgeCrossingPlayer : public QObject,
                READ getCrossSpeed)
 public:
     virtual ~BridgeCrossingPlayer() override = default;
-    BridgeCrossingPlayer() = default;
-    BridgeCrossingPlayer(int uniqueId) {}
+
+    BridgeCrossingPlayer(Identifier uniqueId,
+                         BridgeCrossingTypes::PlayerState state,
+                         BridgeCrossingTypes::PlayerType type);
 
     inline BridgeCrossingTypes::PlayerState getPlayerState() const { return mState; }
+    inline void setPlayerState(BridgeCrossingTypes::PlayerState state)
+    {
+        mState = state;
+        emit notifyStateChangedSignal(state);
+    }
 
     inline BridgeCrossingTypes::PlayerType getPlayerType() const { return mType; }
 
@@ -40,10 +49,7 @@ public:
 
     // IGameActor
     virtual void performAction(BridgeCrossingTypes::PlayerActionSet action) override;
-    virtual int getUniqueId() const override
-    {
-        return mUniqueId;
-    }
+    virtual Identifier getUniqueId() const override { return mUniqueId; }
 
     // IMovableObject
     virtual void move(QPair<int, int> newPosition) override;
@@ -58,12 +64,13 @@ public:
     virtual void settingsChanged() override;
 signals:
     void actionPerformedSignal(BridgeCrossingTypes::PlayerActionSet action);
-    void notifyStateChanged(BridgeCrossingTypes::PlayerState state);
+    void notifyStateChangedSignal(BridgeCrossingTypes::PlayerState state);
 
 private:
-    int mUniqueId;
+    Identifier mUniqueId;
     BridgeCrossingTypes::PlayerState mState;
     BridgeCrossingTypes::PlayerType mType;
+    BridgeCrossingSettings& mSettings;
     CrossSpeed mCrossSpeed;
 };
 

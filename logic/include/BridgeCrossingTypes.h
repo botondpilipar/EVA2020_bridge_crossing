@@ -37,8 +37,8 @@ public:
 
     enum class PlayerState : int
     {
-        CROSSING,
-        RETURNING,
+        SELECTED_TO_CROSS,
+        SELECTED_TO_RETURN,
         ON_CROSSING_SIDE,
         ON_RETURNING_SIDE
     };
