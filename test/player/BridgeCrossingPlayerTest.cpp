@@ -27,12 +27,18 @@ public:
 
 private slots:
     void initTestCase();
+    void init();
     void cleanupTestCase();
+
     void testPlayerId();
+
     void testPerformAction();
     void testPerformInvalidAction();
+    void testPerformMoveToBridgeMultipletimes();
+
     void testThrowOnMove();
     void testThrowOnBoardPosition();
+
     void testDataInitialization();
     void testDataSave();
 
@@ -40,7 +46,14 @@ private:
     std::unique_ptr<BridgeCrossingPlayer> playerWithId;
 };
 
-void BridgeCrossingPlayerTest::initTestCase()
+void
+BridgeCrossingPlayerTest::initTestCase()
+{
+
+}
+
+void
+BridgeCrossingPlayerTest::init()
 {
     SingletonFactory<BridgeCrossingSettings>::setFactory(new BridgeCrossingSettings());
 
@@ -90,6 +103,15 @@ void BridgeCrossingPlayerTest::testPerformInvalidAction()
     playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE); // valid transition
 
     QCOMPARE(crossSpy.count(), 1);
+}
+
+void BridgeCrossingPlayerTest::testPerformMoveToBridgeMultipletimes()
+{
+    playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE);
+    playerWithId->performAction(BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE);
+
+    BridgeCrossingTypes::PlayerState state = playerWithId->getPlayerState();
+    QCOMPARE(state, BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
 }
 void BridgeCrossingPlayerTest::testThrowOnMove()
 {

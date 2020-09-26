@@ -43,6 +43,8 @@ private slots:
 
     void initTestCase();
     void cleanupTestCase();
+    void init();
+    void cleanup();
 
     void testNewGameSignalsEmittedOnNewGameStarted();
     void testPlayerNumberOnNewGameStarted();
@@ -91,7 +93,11 @@ BridgeCrossingBoardTest::initTestCase()
 {
     qRegisterMetaType<PlayerIdMap>();
     qRegisterMetaType<PlayerData>();
+}
 
+void
+BridgeCrossingBoardTest::init()
+{
     mBoard = std::unique_ptr<BridgeCrossingBoard>(new BridgeCrossingBoard());
     mBoardChangedSignalSpy = std::unique_ptr<QSignalSpy>(
                 new QSignalSpy(mBoard.get(),
@@ -122,12 +128,17 @@ BridgeCrossingBoardTest::initTestCase()
 }
 
 void
-BridgeCrossingBoardTest::cleanupTestCase()
+BridgeCrossingBoardTest::cleanup()
 {
     if(SingletonFactory<BridgeCrossingSettings>::isFactorySet())
         SingletonFactory<BridgeCrossingSettings>::deleteFactory();
     if(SingletonFactory<CachedRandomDevice>::isFactorySet())
         SingletonFactory<BridgeCrossingSettings>::deleteFactory();
+}
+
+void
+BridgeCrossingBoardTest::cleanupTestCase()
+{
 }
 
 void BridgeCrossingBoardTest::testNewGameSignalsEmittedOnNewGameStarted()

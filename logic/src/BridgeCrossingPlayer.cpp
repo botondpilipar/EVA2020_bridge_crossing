@@ -69,6 +69,18 @@ BridgeCrossingPlayer::BridgeCrossingPlayer(Identifier uniqueId,
                     emit actionPerformedSignal(action);
                     break;
                 }
+                case BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS:
+                {
+                    setPlayerState(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
+                    emit actionPerformedSignal(action);
+                    break;
+                }
+                case BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN:
+                {
+                    setPlayerState(BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE);
+                    emit actionPerformedSignal(action);
+                    break;
+                }
                 default:
                     break;
             }
@@ -87,7 +99,6 @@ BridgeCrossingPlayer::BridgeCrossingPlayer(Identifier uniqueId,
                 default:
                     break;
             }
-
             break;
          }
      }
