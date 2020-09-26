@@ -21,9 +21,6 @@ BridgeCrossingBoard::getGameState()
     return BridgeCrossingTypes::GameState::CROSS_SELECTION;
 }
 
-void
-BridgeCrossingBoard::addPlayer(const BridgeCrossingPlayer& player){}
-
 Dimension2D
 BridgeCrossingBoard::getDimensions() const {}
 
@@ -48,3 +45,6 @@ BridgeCrossingBoard::onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSe
 {
     return;
 }
+
+void BridgeCrossingBoard::initialize(const BoardData&) {}
+BoardData* BridgeCrossingBoard::save() const { return nullptr; }

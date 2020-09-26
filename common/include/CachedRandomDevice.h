@@ -16,6 +16,8 @@ public:
         dist(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()),
         used()
     {}
+
+    virtual ~CachedRandomDevice() = default;
     virtual int random();
 
 private:

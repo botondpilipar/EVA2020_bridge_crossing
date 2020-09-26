@@ -25,7 +25,7 @@ using namespace kd417d::eva::logic;
      return;
  }
  PlayerData*
- BridgeCrossingPlayer::save()
+ BridgeCrossingPlayer::save() const
  {
      return nullptr;
  }

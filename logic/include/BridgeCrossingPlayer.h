@@ -19,7 +19,8 @@ class BridgeCrossingPlayer : public QObject,
     Q_OBJECT;
 
     Q_PROPERTY(BridgeCrossingTypes::PlayerState mState
-               READ getPlayerState)
+               READ getPlayerState
+               NOTIFY notifyStateChanged)
     Q_PROPERTY(int mUniqueId
                READ getUniqueId)
     Q_PROPERTY(BridgeCrossingTypes::PlayerType mType
@@ -50,13 +51,14 @@ public:
 
     // IDataInitializable
     virtual void initialize(const PlayerData& representation) override;
-    virtual PlayerData* save() override;
+    virtual PlayerData* save() const override;
 
     // ISettingsChangedObserver
 
     virtual void settingsChanged() override;
 signals:
     void actionPerformedSignal(BridgeCrossingTypes::PlayerActionSet action);
+    void notifyStateChanged(BridgeCrossingTypes::PlayerState state);
 
 private:
     int mUniqueId;

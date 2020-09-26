@@ -16,7 +16,7 @@ public:
     IDataInitializable() = default;
 
     virtual void initialize(const DataReprType& representation) = 0;
-    virtual DataReprType* save() = 0;
+    virtual DataReprType* save() const = 0;
 };
 
 }

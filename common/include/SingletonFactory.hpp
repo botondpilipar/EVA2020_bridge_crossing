@@ -22,6 +22,11 @@ public:
         assert(mSingletonInstance != nullptr);
         return *mSingletonInstance;
     }
+    static T* ptrInstance()
+    {
+        assert(mSingletonInstance != nullptr);
+        return mSingletonInstance;
+    }
 protected:
     static T* mSingletonInstance;
 };

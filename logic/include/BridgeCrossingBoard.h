@@ -6,6 +6,9 @@
 #include "BridgeCrossingPlayer.h"
 #include "BridgeCrossingTypes.h"
 
+using namespace kd417d::eva::logic;
+using PlayerIdMap  = QMap<Identifier, PlayerData>;
+
 namespace kd417d
 {
 namespace eva
@@ -22,10 +25,14 @@ class BridgeCrossingBoard : public QObject,
     Q_PROPERTY(BridgeCrossingTypes::GameState mGameState
                READ getGameState);
     Q_PROPERTY(ScoredPoint mTimeEllapsed
-               READ getTimeEllapsed)
+               READ getTimeEllapsed
+               NOTIFY scoredPointChangedSignal)
 public:
-    virtual void addPlayer(const BridgeCrossingPlayer& player);
-    virtual void movePlayer(int uniquePlayerId);
+
+    BridgeCrossingBoard() = default;
+    virtual ~BridgeCrossingBoard() override = default;
+
+    virtual void movePlayer(Identifier uniquePlayerId);
     virtual BridgeCrossingTypes::GameState getGameState();
     virtual void cross();
     virtual BridgeCrossingTypes::GameState getGameState() const;
@@ -43,26 +50,34 @@ public:
     // ISettingsChangedObserver
     virtual void settingsChanged() override;
 
+    // IDataInitializable
+    virtual void initialize(const BoardData&) override;
+    virtual BoardData* save() const override;
+
 signals:
     void scoredPointChangedSignal(ScoredPoint newScore);
-    void newPlayerAddedSignal(BridgeCrossingPlayer& newPlayer);
-    void playerMovedSignal(const BridgeCrossingPlayer&);
+    void playerMovedSignal(PlayerData);
     void gameOverSignal(ScoredPoint finalScore);
     void newGameSignal();
-    void boardChangedSignal(const QMap<int, BridgeCrossingPlayer>&);
+    void boardChangedSignal(PlayerIdMap map);
 
 protected:
     QList<BridgeCrossingPlayer*> mPlayers;
     QList<ISettingsChangedObserver*> mSettingsChangedObservers;
-    QMap<int, BridgeCrossingPlayer> mPlayerIdMap;
+    QMap<int, BridgeCrossingPlayer*> mPlayerIdMap;
     ScoredPoint mTimeEllapsed;
     QStateMachine mStateMachine;
 
 protected slots:
     void onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSet action);
 };
+}
+}
+}
 
-}
-}
-}
+Q_DECLARE_METATYPE(PlayerIdMap)
+Q_DECLARE_METATYPE(PlayerData)
+Q_DECLARE_METATYPE(ScoredPoint)
+
+
 #endif // BRIDGECROSSINGBOARD_H
