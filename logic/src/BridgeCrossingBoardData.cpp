@@ -13,7 +13,7 @@ BoardData::BoardData() : point(0),
     playerNumber(SingletonFactory<BridgeCrossingSettings>::instance().allPlayers()),
     playerData()
 {}
-BoardData::BoardData(QVector<PlayerData>& playerData,
+BoardData::BoardData(QVector<std::shared_ptr<PlayerData>>& playerData,
           ScoredPoint point,
           unsigned int playerNumber,
           BridgeCrossingTypes::GameState state)

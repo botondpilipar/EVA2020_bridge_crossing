@@ -37,7 +37,7 @@ public:
 
     virtual ~BridgeCrossingBoardTest() override = default;
 
-    QVector<PlayerData>* getSamplePlyerData() const;
+    QVector<std::shared_ptr<PlayerData>>* getSamplePlayerData() const;
 private slots:
 
 
@@ -72,18 +72,18 @@ private:
     BridgeCrossingSettings* mSettings;
 };
 
-QVector<PlayerData>*
-BridgeCrossingBoardTest::getSamplePlyerData() const
+QVector<std::shared_ptr<PlayerData>>*
+BridgeCrossingBoardTest::getSamplePlayerData() const
 {
-    QVector<PlayerData>* data = new QVector<PlayerData>();
+    QVector<std::shared_ptr<PlayerData>>* data = new QVector<std::shared_ptr<PlayerData>>();
 
     for(int i = 0; i<5; ++i)
     {
-        PlayerData playerData(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
+        PlayerData* playerData = new PlayerData(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
                         SingletonFactory<CachedRandomDevice>::instance().random(),
                         BridgeCrossingTypes::PlayerType::MEDIUM,
                         10);
-        data->push_back(playerData);
+        data->push_back(std::shared_ptr<PlayerData>(playerData));
     }
     return data;
 }
@@ -98,6 +98,14 @@ BridgeCrossingBoardTest::initTestCase()
 void
 BridgeCrossingBoardTest::init()
 {
+    BridgeCrossingSettings* settings = new BridgeCrossingSettings();
+    SingletonFactory<BridgeCrossingSettings>::setFactory(settings);
+    mSettings = SingletonFactory<BridgeCrossingSettings>::ptrInstance();
+
+
+    CachedRandomDevice* randomDevice = new CachedRandomDevice();
+    SingletonFactory<CachedRandomDevice>::setFactory(randomDevice);
+
     mBoard = std::unique_ptr<BridgeCrossingBoard>(new BridgeCrossingBoard());
     mBoardChangedSignalSpy = std::unique_ptr<QSignalSpy>(
                 new QSignalSpy(mBoard.get(),
@@ -119,21 +127,20 @@ BridgeCrossingBoardTest::init()
                 new QSignalSpy(mBoard.get(),
                 SIGNAL(scoredPointChangedSignal(ScoredPoint))));
 
-    BridgeCrossingSettings* settings = new BridgeCrossingSettings();
-    SingletonFactory<BridgeCrossingSettings>::setFactory(settings);
-    mSettings = SingletonFactory<BridgeCrossingSettings>::ptrInstance();
 
-    CachedRandomDevice* randomDevice = new CachedRandomDevice();
-    SingletonFactory<CachedRandomDevice>::setFactory(randomDevice);
 }
 
 void
 BridgeCrossingBoardTest::cleanup()
 {
     if(SingletonFactory<BridgeCrossingSettings>::isFactorySet())
+    {
         SingletonFactory<BridgeCrossingSettings>::deleteFactory();
+    }
     if(SingletonFactory<CachedRandomDevice>::isFactorySet())
-        SingletonFactory<BridgeCrossingSettings>::deleteFactory();
+    {
+        SingletonFactory<CachedRandomDevice>::deleteFactory();
+    }
 }
 
 void
@@ -154,16 +161,18 @@ BridgeCrossingBoardTest::testPlayerNumberOnNewGameStarted()
 {
     mBoard->startNewGame();
 
+    QCOMPARE(mBoardChangedSignalSpy->count(), 1);
+
     auto boardChange = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0));
-    QList<PlayerData> values = boardChange.values();
+    QList<std::shared_ptr<PlayerData>> values = boardChange.values();
     auto slowPlayerList = QtConcurrent::filtered(values,
-                                              [](const PlayerData& data){ return data.type ==
+                                              [](auto data){ return data->type ==
                                                 BridgeCrossingTypes::PlayerType::SLOW; });
     auto mediumPlayerList = QtConcurrent::filtered(values,
-                                                [](const PlayerData& data){ return data.type ==
+                                                [](auto data){ return data->type ==
                                                   BridgeCrossingTypes::PlayerType::MEDIUM; });
     auto fastPlayerList = QtConcurrent::filtered(values,
-                                              [](const PlayerData& data){ return data.type ==
+                                              [](auto data){ return data->type ==
                                                 BridgeCrossingTypes::PlayerType::FAST;});
 
     int slowPlayers = slowPlayerList.results().size();
@@ -183,51 +192,54 @@ void
 BridgeCrossingBoardTest::testPlayerCrossTimeOnNewGameStarted()
 {
     mBoard->startNewGame();
+
+    QCOMPARE(mBoardChangedSignalSpy->count(), 1);
+
     auto boardChange = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0));
-    QList<PlayerData> values = boardChange.values();
+    QList<std::shared_ptr<PlayerData>> values = boardChange.values();
 
     auto aSlowPlayer = std::find_if(values.begin(),
                                            values.end(),
-                                           [](const PlayerData& player){ return player.type ==
+                                           [](auto player){ return player->type ==
                                             BridgeCrossingTypes::PlayerType::SLOW; });
     auto aMediumPlayer = std::find_if(values.begin(),
                                              values.end(),
-                                             [](const PlayerData& player){ return player.type ==
+                                             [](auto player){ return player->type ==
                                               BridgeCrossingTypes::PlayerType::MEDIUM; });
     auto aFastPlayer = std::find_if(values.begin(),
                                            values.end(),
-                                           [](const PlayerData& player){ return player.type ==
+                                           [](auto player){ return player->type ==
                                             BridgeCrossingTypes::PlayerType::FAST; });
     QVERIFY(aSlowPlayer != values.end());
     QVERIFY(aMediumPlayer != values.end());
     QVERIFY(aFastPlayer != values.end());
 
-    QCOMPARE(aSlowPlayer->speed, mSettings->getSlowPlayerCrossTime());
-    QCOMPARE(aMediumPlayer->speed, mSettings->getMediumPlayerCrossTime());
-    QCOMPARE(aFastPlayer->speed, mSettings->getFastPlayerCrossTime());
+    QCOMPARE((*aSlowPlayer)->id, mSettings->getSlowPlayerCrossTime());
+    QCOMPARE((*aMediumPlayer)->speed, mSettings->getMediumPlayerCrossTime());
+    QCOMPARE((*aFastPlayer)->speed, mSettings->getFastPlayerCrossTime());
 }
 
 void
 BridgeCrossingBoardTest::testPlayerStateOnNewGameStarted()
 {
     mBoard->startNewGame();
-    QList<PlayerData> boardChangeValues = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0)).values();
+    QList<std::shared_ptr<PlayerData>> boardChangeValues = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0)).values();
 
     QVERIFY(std::all_of(boardChangeValues.begin(),
                         boardChangeValues.end(),
-                        [](const PlayerData& data) { return data.state == BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE; }));
+                        [](auto data) { return data->state == BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE; }));
 }
 
 void
 BridgeCrossingBoardTest::testInitialization()
 {
-    auto initializationData = std::unique_ptr<QVector<PlayerData>>(getSamplePlyerData());
+    auto initializationData = std::unique_ptr<QVector<std::shared_ptr<PlayerData>>>(getSamplePlayerData());
 
     QVector<Identifier> initializationId(initializationData->size());
     std::transform(initializationData->begin(),
                    initializationData->end(),
                    initializationId.begin(),
-                   [](const PlayerData& data){return data.id;});
+                   [](auto data){return data->id;});
 
     BoardData boardData(*initializationData, 100, initializationData->size(),
                         BridgeCrossingTypes::GameState::CROSS_SELECTION);
@@ -240,15 +252,30 @@ BridgeCrossingBoardTest::testInitialization()
 void BridgeCrossingBoardTest::testSave()
 {
     mBoard->startNewGame();
-    QList<PlayerData> boardChangeValues = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0)).values();
+    QList<std::shared_ptr<PlayerData>> boardChangeValues = qvariant_cast<PlayerIdMap>(mBoardChangedSignalSpy->takeFirst().at(0)).values();
+
     std::unique_ptr<BoardData> data(mBoard->save());
-    QList<PlayerData> savedValues = data->playerData.toList();
+
+    QList<PlayerData> changedValues{};
+
+    for(std::shared_ptr<PlayerData> data : boardChangeValues)
+    {
+        changedValues.push_back(*data);
+    }
+
+
+    QList<std::shared_ptr<PlayerData>> savedValuePtrs = data->playerData.toList();
+    QList<PlayerData> savedValues{};
+    for(std::shared_ptr<PlayerData> data : savedValuePtrs)
+    {
+        savedValues.push_back(*data);
+    }
 
     QCOMPARE(data->playerNumber, mSettings->allPlayers());
     QCOMPARE(data->state, BridgeCrossingTypes::GameState::CROSS_SELECTION);
     QCOMPARE(data->point, 0);
 
-    QVERIFY(std::is_permutation(boardChangeValues.begin(), boardChangeValues.end(),
+    QVERIFY(std::is_permutation(changedValues.begin(), changedValues.end(),
                                 savedValues.begin()));
 }
 

@@ -15,7 +15,13 @@ public:
     {
         mSingletonInstance = instance;
     }
-    static void deleteFactory() { delete mSingletonInstance; }
+    static void deleteFactory()
+    {
+        if(isFactorySet())
+        {
+            delete mSingletonInstance;
+        }
+    }
     static bool isFactorySet() { return mSingletonInstance != nullptr; }
     static T& instance()
     {

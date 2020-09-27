@@ -23,7 +23,8 @@ SOURCES += \
     src/BridgeCrossingBoard.cpp \
     src/BridgeCrossingBoardData.cpp \
     src/BridgeCrossingPlayer.cpp \
-    src/BridgeCrossingPlayerData.cpp
+    src/BridgeCrossingPlayerData.cpp \
+    src/BridgeCrosssingSettings.cpp
 
 
 

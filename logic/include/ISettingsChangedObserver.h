@@ -11,6 +11,9 @@ namespace logic
 class ISettingsChangedObserver
 {
 public:
+    virtual ~ISettingsChangedObserver() = default;
+    ISettingsChangedObserver() = default;
+
     virtual void settingsChanged() = 0;
 };
 

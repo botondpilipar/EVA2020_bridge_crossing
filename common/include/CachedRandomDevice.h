@@ -17,7 +17,7 @@ public:
         used()
     {}
 
-    virtual ~CachedRandomDevice() = default;
+    virtual ~CachedRandomDevice() {}
     virtual int random();
 
 private:

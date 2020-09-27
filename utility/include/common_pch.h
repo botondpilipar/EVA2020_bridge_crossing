@@ -15,6 +15,7 @@
 #include <random>
 #include <unordered_set>
 #include <limits>
+#include <iterator>
 
 // Qt includes
 #include <QObject>

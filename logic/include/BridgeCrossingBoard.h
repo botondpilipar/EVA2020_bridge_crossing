@@ -6,8 +6,10 @@
 #include "BridgeCrossingPlayer.h"
 #include "BridgeCrossingTypes.h"
 
+#include <CachedRandomDevice.h>
+
 using namespace kd417d::eva::logic;
-using PlayerIdMap  = QMap<Identifier, PlayerData>;
+using PlayerIdMap  = QMap<Identifier, std::shared_ptr<PlayerData>>;
 
 namespace kd417d
 {
@@ -29,11 +31,10 @@ class BridgeCrossingBoard : public QObject,
                NOTIFY scoredPointChangedSignal)
 public:
 
-    BridgeCrossingBoard() = default;
-    virtual ~BridgeCrossingBoard() override = default;
+    BridgeCrossingBoard();
+    virtual ~BridgeCrossingBoard() override;
 
     virtual void movePlayer(Identifier uniquePlayerId);
-    virtual BridgeCrossingTypes::GameState getGameState();
     virtual void cross();
     virtual BridgeCrossingTypes::GameState getGameState() const;
     virtual ScoredPoint getTimeEllapsed() const;
@@ -62,11 +63,24 @@ signals:
     void boardChangedSignal(PlayerIdMap map);
 
 protected:
-    QList<BridgeCrossingPlayer*> mPlayers;
-    QList<ISettingsChangedObserver*> mSettingsChangedObservers;
+    QVector<BridgeCrossingPlayer*> mPlayers;
     QMap<int, BridgeCrossingPlayer*> mPlayerIdMap;
     ScoredPoint mTimeEllapsed;
-    QStateMachine mStateMachine;
+    BridgeCrossingTypes::GameState mGameState;
+
+    void connectToPlayers();
+    void disconnectFromPlayers();
+
+private:
+    BridgeCrossingSettings& mSettings;
+    CachedRandomDevice& mRandomDevice;
+    QVector<BridgeCrossingPlayer*> mBridgeBuffer;
+    bool mIsPaused;
+
+    bool isBridgeBufferFull() const { return mBridgeBuffer.size() ==
+                                   BridgeCrossingSettingDefaults::playersCanCrossAtOneTime; }
+
+
 
 protected slots:
     void onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSet action);

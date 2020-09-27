@@ -20,7 +20,7 @@ public:
     static constexpr unsigned int mediumPlayerCrossSpeed = 8;
     static constexpr unsigned int fastPlayerCrossSpeed = 4;
 
-
+    static constexpr unsigned int playersCanCrossAtOneTime = 3;
 };
 
 class BridgeCrossingSettings : public QObject
@@ -65,6 +65,9 @@ signals:
     void notifyFastPlayerCrossTimePropertyChanged();
 
 public:
+
+    BridgeCrossingSettings();
+    virtual ~BridgeCrossingSettings() override = default;
 
     constexpr inline unsigned int allPlayers() noexcept { return mSlowPlayerNumber
                                                       + mMediumPlayerNumber

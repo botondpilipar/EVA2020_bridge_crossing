@@ -25,7 +25,7 @@ struct BoardData : public ISerializable,
     virtual ~BoardData() override = default;
 
     BoardData();
-    BoardData(QVector<PlayerData>& playerData,
+    BoardData(QVector<std::shared_ptr<PlayerData>>& playerData,
               ScoredPoint point,
               unsigned int playerNumber,
               BridgeCrossingTypes::GameState state);
@@ -46,7 +46,7 @@ struct BoardData : public ISerializable,
     ScoredPoint point;
     BridgeCrossingTypes::GameState state;
     unsigned int playerNumber;
-    QVector<PlayerData> playerData;
+    QVector<std::shared_ptr<PlayerData>> playerData;
 
 };
 

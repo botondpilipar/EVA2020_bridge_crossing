@@ -30,6 +30,11 @@ struct PlayerData : public ISerializable, public IDeserializable
                CrossSpeed speed)
         : state(state), id(id), type(type), speed(speed) {}
 
+    PlayerData(const PlayerData&) = default;
+    PlayerData(PlayerData&&) = default;
+    PlayerData& operator=(const PlayerData&) = default;
+    PlayerData& operator=(PlayerData&&) = default;
+
     BridgeCrossingTypes::PlayerState state;
     Identifier id;
     BridgeCrossingTypes::PlayerType type;

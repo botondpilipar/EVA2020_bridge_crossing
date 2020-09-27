@@ -66,12 +66,14 @@ signals:
     void actionPerformedSignal(BridgeCrossingTypes::PlayerActionSet action);
     void notifyStateChangedSignal(BridgeCrossingTypes::PlayerState state);
 
+
 private:
     Identifier mUniqueId;
     BridgeCrossingTypes::PlayerState mState;
     BridgeCrossingTypes::PlayerType mType;
     BridgeCrossingSettings& mSettings;
     CrossSpeed mCrossSpeed;
+
 };
 
 }
