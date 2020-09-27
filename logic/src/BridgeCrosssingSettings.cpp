@@ -3,12 +3,11 @@
 using namespace kd417d::eva::logic;
 
 BridgeCrossingSettings::BridgeCrossingSettings()
+    : mSlowPlayerNumber(BridgeCrossingSettingDefaults::slowPlayerNumber),
+      mMediumPlayerNumber(BridgeCrossingSettingDefaults::mediumPlayerNumber),
+      mFastPlayerNumber(BridgeCrossingSettingDefaults::fastPlayerNumber),
+      mSlowPlayerCrossTime(BridgeCrossingSettingDefaults::slowPlayerCrossSpeed),
+      mMediumPlayerCrossTime(BridgeCrossingSettingDefaults::mediumPlayerCrossSpeed),
+      mFastPlayerCrossTime(BridgeCrossingSettingDefaults::fastPlayerCrossSpeed)
 {
-    resetSlowPlayerNumber();
-    resetMediumPlayerNumber();
-    resetFastPlayerNumber();
-
-    resetSlowPlayerCrossTime();
-    resetMediumPlayerCrossTime();
-    resetFastPlayerCrossTime();
 }

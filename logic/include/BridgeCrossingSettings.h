@@ -73,7 +73,7 @@ public:
                                                       + mMediumPlayerNumber
                                                       + mFastPlayerNumber; }
 
-    unsigned int getSlowPlayerNumber() const { return mSlowPlayerCrossTime; }
+    unsigned int getSlowPlayerNumber() const { return mSlowPlayerNumber; }
     void setSlowPlayerNumber(unsigned int newPlayerNumber)
     {
         mSlowPlayerNumber = newPlayerNumber;
@@ -96,7 +96,7 @@ public:
         emit notifySlowPlayerCrossTimePropertyChanged();
     }
 
-    unsigned int getMediumPlayerNumber() const { return mMediumPlayerCrossTime; }
+    unsigned int getMediumPlayerNumber() const { return mMediumPlayerNumber; }
     void setMediumPlayerNumber(unsigned int newPlayerNumber)
     {
         mMediumPlayerNumber = newPlayerNumber;
@@ -119,7 +119,7 @@ public:
         emit notifyMediumPlayerCrossTimePropertyChanged();
     }
 
-    unsigned int getFastPlayerNumber() const { return mFastPlayerCrossTime; }
+    unsigned int getFastPlayerNumber() const { return mFastPlayerNumber; }
     void setFastPlayerNumber(unsigned int newPlayerNumber)
     {
         mFastPlayerNumber = newPlayerNumber;

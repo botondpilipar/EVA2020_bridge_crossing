@@ -19,6 +19,8 @@ public:
 
     virtual ~CachedRandomDevice() {}
     virtual int random();
+    virtual void exclude(const std::unordered_set<int>& toExclude) { used.insert(toExclude.begin(),
+                                                                                 toExclude.end()); }
 
 private:
     std::random_device device;

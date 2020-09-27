@@ -57,14 +57,13 @@ public:
 
 signals:
     void scoredPointChangedSignal(ScoredPoint newScore);
-    void playerMovedSignal(PlayerData);
     void gameOverSignal(ScoredPoint finalScore);
     void newGameSignal();
     void boardChangedSignal(PlayerIdMap map);
 
 protected:
-    QVector<BridgeCrossingPlayer*> mPlayers;
-    QMap<int, BridgeCrossingPlayer*> mPlayerIdMap;
+    QVector<std::shared_ptr<BridgeCrossingPlayer>> mPlayers;
+    QMap<int, std::shared_ptr<BridgeCrossingPlayer>> mPlayerIdMap;
     ScoredPoint mTimeEllapsed;
     BridgeCrossingTypes::GameState mGameState;
 

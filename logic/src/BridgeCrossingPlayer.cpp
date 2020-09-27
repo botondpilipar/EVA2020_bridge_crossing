@@ -23,10 +23,12 @@ BridgeCrossingPlayer::BridgeCrossingPlayer(Identifier uniqueId,
         case BridgeCrossingTypes::PlayerType::MEDIUM:
         {
             mCrossSpeed = mSettings.getMediumPlayerCrossTime();
+            break;
         }
         case BridgeCrossingTypes::PlayerType::FAST:
         {
             mCrossSpeed = mSettings.getFastPlayerCrossTime();
+            break;
         }
     }
 }
