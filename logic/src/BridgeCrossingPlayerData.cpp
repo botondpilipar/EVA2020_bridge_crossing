@@ -10,7 +10,7 @@ using namespace kd417d::eva;
 using namespace kd417d::eva::logic::bridge;
 
 PlayerData::PlayerData()
-    : state(BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS),
+    : state(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE),
       id(SingletonFactory<CachedRandomDevice>::instance().random()),
       type(BridgeCrossingTypes::PlayerType::SLOW),
       speed(0)

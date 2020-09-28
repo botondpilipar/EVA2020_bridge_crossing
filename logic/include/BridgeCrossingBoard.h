@@ -38,6 +38,7 @@ public:
     virtual void cross();
     virtual BridgeCrossingTypes::GameState getGameState() const;
     virtual ScoredPoint getTimeEllapsed() const;
+    virtual bool isGameOverScenario() const;
 
     // IGameBoard
     virtual Dimension2D getDimensions() const override;
@@ -80,6 +81,8 @@ private:
                                    BridgeCrossingSettingDefaults::playersCanCrossAtOneTime; }
 
 
+    CrossSpeed maxBridgeCrosserSpeed() const;
+    void resetPlayerOnIllegalMove(Identifier id);
 
 protected slots:
     void onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSet action);

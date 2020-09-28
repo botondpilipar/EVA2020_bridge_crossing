@@ -5,6 +5,34 @@
 
 using namespace kd417d::eva::logic;
 
+const std::map<BridgeCrossingTypes::PlayerActionSet,
+    const std::set<std::pair<BridgeCrossingTypes::PlayerState, BridgeCrossingTypes::PlayerState>>> playerStateTransitionMap =
+{
+    { BridgeCrossingTypes::PlayerActionSet::CROSS,
+      {
+          { BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS, BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE }
+      }
+    },
+    { BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE,
+      {
+          { BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS, BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE},
+
+          { BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE, BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS},
+
+          { BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN, BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE},
+
+          { BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE, BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN}
+      }
+    },
+
+    { BridgeCrossingTypes::PlayerActionSet::RETURN,
+      {
+          { BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN, BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE }
+      }
+    }
+};
+
+
 BridgeCrossingPlayer::BridgeCrossingPlayer(Identifier uniqueId,
                                            BridgeCrossingTypes::PlayerState state,
                                            BridgeCrossingTypes::PlayerType type)
@@ -33,77 +61,19 @@ BridgeCrossingPlayer::BridgeCrossingPlayer(Identifier uniqueId,
     }
 }
 
-
 // IGameActor
  void
  BridgeCrossingPlayer::performAction(BridgeCrossingTypes::PlayerActionSet action)
  {
-     switch(action)
-     {
-        case BridgeCrossingTypes::PlayerActionSet::CROSS:
-        {
-         switch(mState)
-         {
-            case BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS:
-             {
-                setPlayerState(BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE);
-                emit actionPerformedSignal(action);
-                break;
-             }
-             default:
-                 break;
-         }
-        }
-            break;
-        case BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE:
-         {
-            switch(mState)
-            {
-                case BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE:
-                {
-                    setPlayerState(BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS);
-                    emit actionPerformedSignal(action);
-                    break;
-                }
-                case BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE:
-                {
-                    setPlayerState(BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN);
-                    emit actionPerformedSignal(action);
-                    break;
-                }
-                case BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS:
-                {
-                    setPlayerState(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
-                    emit actionPerformedSignal(action);
-                    break;
-                }
-                case BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN:
-                {
-                    setPlayerState(BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE);
-                    emit actionPerformedSignal(action);
-                    break;
-                }
-                default:
-                    break;
-            }
-         }
-            break;
-        case BridgeCrossingTypes::PlayerActionSet::RETURN:
-         {
-            switch(mState)
-            {
-                case BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN:
-                {
-                    setPlayerState(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
-                    emit actionPerformedSignal(action);
-                    break;
-                }
-                default:
-                    break;
-            }
-            break;
-         }
-     }
+    auto transitionSetIt = playerStateTransitionMap.find(action);
+    auto newStateIt = std::find_if(transitionSetIt->second.cbegin(),
+                                   transitionSetIt->second.cend(),
+                                   [this](const auto& transitionPair) { return transitionPair.first == mState; });
+    if(newStateIt != transitionSetIt->second.cend())
+    {
+        mState = newStateIt->second;
+        emit actionPerformedSignal(action);
+    }
  }
 
 // IMovableObject

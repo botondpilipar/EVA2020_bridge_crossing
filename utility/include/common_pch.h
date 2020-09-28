@@ -16,6 +16,7 @@
 #include <unordered_set>
 #include <limits>
 #include <iterator>
+#include <set>
 
 // Qt includes
 #include <QObject>

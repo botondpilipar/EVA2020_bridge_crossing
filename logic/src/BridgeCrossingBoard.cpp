@@ -4,6 +4,30 @@
 
 using namespace kd417d::eva::logic;
 
+
+const std::map<BridgeCrossingTypes::PlayerActionSet, BridgeCrossingTypes::GameState> boardStateTransitionMap =
+{
+    { BridgeCrossingTypes::PlayerActionSet::CROSS, BridgeCrossingTypes::GameState::RETURN_SELECTION },
+    { BridgeCrossingTypes::PlayerActionSet::RETURN, BridgeCrossingTypes::GameState::CROSS_SELECTION }
+};
+
+const std::map<BridgeCrossingTypes::PlayerState, BridgeCrossingTypes::GameState> legalPlayerStateMap =
+{
+    { BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE, BridgeCrossingTypes::GameState::CROSS_SELECTION },
+    { BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS, BridgeCrossingTypes::GameState::CROSS_SELECTION },
+    { BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE, BridgeCrossingTypes::GameState::RETURN_SELECTION },
+    { BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN, BridgeCrossingTypes::GameState::RETURN_SELECTION },
+
+};
+
+const std::map<BridgeCrossingTypes::PlayerState, BridgeCrossingTypes::PlayerState> reversePlayerStateMap =
+{
+    { BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE, BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS },
+    { BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS, BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE },
+    { BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE, BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN },
+    { BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN, BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE },
+};
+
 BridgeCrossingBoard::BridgeCrossingBoard()
     : mGameState(BridgeCrossingTypes::GameState::CROSS_SELECTION),
       mSettings(SingletonFactory<BridgeCrossingSettings>::instance()),
@@ -49,26 +73,34 @@ BridgeCrossingBoard::~BridgeCrossingBoard()
 void
 BridgeCrossingBoard::cross()
 {
-    switch(mGameState)
+
+    if(!mBridgeBuffer.empty())
     {
-        case BridgeCrossingTypes::GameState::CROSS_SELECTION:
+        PlayerIdMap boardChange{};
+
+        mTimeEllapsed += maxBridgeCrosserSpeed();
+
+        auto action = mGameState == BridgeCrossingTypes::GameState::CROSS_SELECTION ?
+                BridgeCrossingTypes::PlayerActionSet::CROSS :
+                    BridgeCrossingTypes::PlayerActionSet::RETURN;
+        for(const auto& player : mBridgeBuffer)
         {
-            for(auto player : mBridgeBuffer)
-            {
-                player->performAction(BridgeCrossingTypes::PlayerActionSet::CROSS);
-            }
-            break;
+            player->performAction(action);
+            boardChange.insert(player->getUniqueId(), std::shared_ptr<PlayerData>(player->save()));
         }
-        case BridgeCrossingTypes::GameState::RETURN_SELECTION:
+        mBridgeBuffer.clear();
+
+        if(isGameOverScenario())
         {
-            for(auto player : mBridgeBuffer)
-            {
-                player->performAction(BridgeCrossingTypes::PlayerActionSet::RETURN);
-            }
-            break;
+            emit gameOverSignal(mTimeEllapsed);
+            startNewGame();
+        }
+        else
+        {
+            emit scoredPointChangedSignal(mTimeEllapsed);
+            emit boardChangedSignal(boardChange);
         }
     }
-    mBridgeBuffer.clear();
 }
 
 void
@@ -80,7 +112,6 @@ BridgeCrossingBoard::movePlayer(Identifier uniquePlayerId)
     }
 
     mPlayerIdMap.value(uniquePlayerId)->performAction(BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE);
-
 }
 
 Dimension2D
@@ -112,7 +143,7 @@ BridgeCrossingBoard::startNewGame()
     mBridgeBuffer.clear();
     mGameState = BridgeCrossingTypes::GameState::CROSS_SELECTION;
     mIsPaused = false;
-    QMap<Identifier, std::shared_ptr<PlayerData>> playerIdData{};
+    PlayerIdMap playerIdData{};
 
     for(const auto& player : mPlayers)
     {
@@ -162,71 +193,51 @@ BridgeCrossingBoard::onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSe
         return;
     }
 
-    QMap<Identifier, std::shared_ptr<PlayerData>> changed{};
-
-    switch(action)
+    auto transitionIt = boardStateTransitionMap.find(action);
+    if(transitionIt != boardStateTransitionMap.end())
     {
-        case BridgeCrossingTypes::PlayerActionSet::CROSS:
+        mGameState = transitionIt->second;
+        return;
+    }
+
+    auto legalGameState = legalPlayerStateMap.find(sender->getPlayerState());
+    if(legalGameState->second != mGameState)
+    {
+        return;
+    }
+    PlayerIdMap changed{};
+
+    // When player is moved at bridge
+
+    switch(sender->getPlayerState())
+    {
+        case BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE:
+        case BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE:
         {
-            mGameState = BridgeCrossingTypes::GameState::RETURN_SELECTION;
+            auto iteratorToSender = std::find(mBridgeBuffer.begin(), mBridgeBuffer.end(), sender);
+            assert(iteratorToSender != mBridgeBuffer.end());
+
+            mBridgeBuffer.erase(iteratorToSender);
             changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
+            emit boardChangedSignal(changed);
             break;
         }
-        case BridgeCrossingTypes::PlayerActionSet::RETURN:
+        case BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS:
+        case BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN:
         {
-            mGameState = BridgeCrossingTypes::GameState::CROSS_SELECTION;
-            changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
-            break;
-        }
-        case BridgeCrossingTypes::PlayerActionSet::MOVE_TO_BRIDGE:
-        {
-            switch(sender->getPlayerState())
+            if(isBridgeBufferFull())
             {
-                case BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE:
-                case BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE:
-                {
-                    auto iteratorToSender = std::find(mBridgeBuffer.begin(), mBridgeBuffer.end(), sender);
-                    assert(iteratorToSender != mBridgeBuffer.end());
-
-                    mBridgeBuffer.erase(iteratorToSender);
-                    changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
-                    break;
-                }
-                case BridgeCrossingTypes::PlayerState::SELECTED_TO_CROSS:
-                {
-                    mGameState = BridgeCrossingTypes::GameState::CROSS_SELECTION;
-                    if(isBridgeBufferFull())
-                    {
-                        sender->setPlayerState(BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE);
-                    }
-                    else
-                    {
-                        mBridgeBuffer.push_back(sender);
-                        changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
-                    }
-                    break;
-                }
-                case BridgeCrossingTypes::PlayerState::SELECTED_TO_RETURN:
-                {
-                    mGameState = BridgeCrossingTypes::GameState::RETURN_SELECTION;
-
-                    if(isBridgeBufferFull())
-                    {
-                        sender->setPlayerState(BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE);
-                    }
-                    else
-                    {
-                        mBridgeBuffer.push_back(sender);
-                        changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
-                    }
-                    break;
-                }
+                resetPlayerOnIllegalMove(sender->getUniqueId());
+            }
+            else
+            {
+                mBridgeBuffer.push_back(sender);
+                changed.insert(sender->getUniqueId(), std::shared_ptr<PlayerData>(sender->save()));
+                emit boardChangedSignal(changed);
             }
             break;
         }
     }
-
-    emit boardChangedSignal(changed);
 }
 
 void BridgeCrossingBoard::initialize(const BoardData& data)
@@ -234,9 +245,9 @@ void BridgeCrossingBoard::initialize(const BoardData& data)
     mTimeEllapsed = data.point;
     mGameState = data.state;
     mPlayerIdMap.clear();
+    mPlayers.clear();
     PlayerIdMap changed;
 
-    mPlayers.resize(data.playerData.size());
     for(const auto& playerDataPtr : data.playerData)
     {
         std::shared_ptr<BridgeCrossingPlayer> newPlayer
@@ -244,10 +255,12 @@ void BridgeCrossingBoard::initialize(const BoardData& data)
                                                         BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
                                                         BridgeCrossingTypes::PlayerType::FAST);
         newPlayer->initialize(*playerDataPtr);
+        mPlayers.push_back(newPlayer);
         mPlayerIdMap.insert(newPlayer->getUniqueId(), newPlayer);
         changed.insert(newPlayer->getUniqueId(), playerDataPtr);
     }
 
+    connectToPlayers();
     emit boardChangedSignal(changed);
 }
 
@@ -281,4 +294,30 @@ void BridgeCrossingBoard::disconnectFromPlayers()
         QObject::disconnect(player.get(), &BridgeCrossingPlayer::actionPerformedSignal,
                          this, &BridgeCrossingBoard::onPlayerActionPerformed);
     }
+}
+
+CrossSpeed
+BridgeCrossingBoard::maxBridgeCrosserSpeed() const
+{
+    QVector<CrossSpeed> speeds{};
+    std::transform(mBridgeBuffer.begin(), mBridgeBuffer.end(), std::back_inserter(speeds),
+                   [](const auto& p){ return p->getCrossSpeed(); });
+    CrossSpeed max = *std::max_element(speeds.begin(), speeds.end());
+    return max;
+}
+
+bool
+BridgeCrossingBoard::isGameOverScenario() const
+{
+    return std::all_of(mPlayers.begin(), mPlayers.end(),
+                       [](const auto& player) {
+            return player->getPlayerState() == BridgeCrossingTypes::PlayerState::ON_RETURNING_SIDE;});
+}
+
+void
+BridgeCrossingBoard::resetPlayerOnIllegalMove(Identifier id)
+{
+    std::shared_ptr<BridgeCrossingPlayer> player = mPlayerIdMap.value(id);
+    auto reversedState = reversePlayerStateMap.find(player->getPlayerState())->second;
+    player->setPlayerState(reversedState);
 }
