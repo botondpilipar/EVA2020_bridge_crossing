@@ -4,9 +4,9 @@ import QtQuick.Controls 2.5
 ApplicationWindow {
     id: window
     width: 1200
-    height: 900
+    height: 800
     visible: true
-    title: qsTr("Stack")
+    title: qsTr("Átkelés a hídon")
 
     header: ToolBar {
         contentHeight: toolButton.implicitHeight
