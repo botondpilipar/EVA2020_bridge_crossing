@@ -12,3 +12,6 @@ INCLUDEPATH += $$top_srcdir/access/include
 INCLUDEPATH += $$top_srcdir/common/include
 INCLUDEPATH += $$top_srcdir/logic/include
 PRECOMPILED_HEADER = $$top_srcdir/utility/include/common_pch.h
+
+RESOURCES += \
+    $$PWD/res.qrc

@@ -11,16 +11,36 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    bridgecrossingviewmanager.cpp
+    BridgeCrossingViewManager.cpp \
+    SettingsDialog.cpp \
+    main.cpp
 
 HEADERS += \
-    bridgecrossingviewmanager.h
+    BridgeCrossingViewManager.h \
+    SettingsDialog.h
 
 FORMS += \
-    bridgecrossingviewmanager.ui
+    bridgecrossingviewmanager.ui \
+    settings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+unix|win32: LIBS += -L$$OUT_PWD/../logic/ -llogic
+
+INCLUDEPATH += $$PWD/../logic
+DEPENDPATH += $$PWD/../logic
+
+
+unix|win32: LIBS += -L$$OUT_PWD/../access/ -laccess
+
+INCLUDEPATH += $$PWD/../access
+DEPENDPATH += $$PWD/../access
+
+
+unix|win32: LIBS += -L$$OUT_PWD/../common/ -lcommon
+
+INCLUDEPATH += $$PWD/../common
+DEPENDPATH += $$PWD/../common

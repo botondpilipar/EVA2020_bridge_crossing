@@ -14,6 +14,8 @@ SUBDIRS += view \
             common \
             test \
 
+RESOURCES = res.qrc
+
 test.depends = logic
 logic.depends = access
 logic.depends = common
