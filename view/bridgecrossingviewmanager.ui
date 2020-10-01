@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1235</width>
+    <height>667</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>300</y>
+      <x>1080</x>
+      <y>290</y>
       <width>120</width>
       <height>241</height>
      </rect>
@@ -26,7 +26,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="newGameButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -39,7 +39,7 @@
       <string>Új játék</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="pauseContinueButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -52,7 +52,7 @@
       <string>Megállít</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="settingsButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -65,7 +65,7 @@
       <string>Beállítások</string>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber">
+    <widget class="QLCDNumber" name="pointCounter">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -76,21 +76,72 @@
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QWidget" name="playerAreaWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
-      <width>671</width>
-      <height>541</height>
+      <y>10</y>
+      <width>1071</width>
+      <height>641</height>
      </rect>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::WinPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>500</y>
+       <width>441</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="crossSideLayout"/>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>360</y>
+       <width>161</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="bridgeCrossLayout"/>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>140</y>
+       <width>159</width>
+       <height>78</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="bridgeReturnLayout"/>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>20</y>
+       <width>441</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="returnSideLayout"/>
+    </widget>
+    <widget class="QPushButton" name="crossButton">
+     <property name="geometry">
+      <rect>
+       <x>650</x>
+       <y>320</y>
+       <width>102</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mehet</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

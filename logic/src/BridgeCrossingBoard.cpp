@@ -73,6 +73,10 @@ BridgeCrossingBoard::~BridgeCrossingBoard()
 void
 BridgeCrossingBoard::cross()
 {
+    if(mIsPaused)
+    {
+        return;
+    }
 
     if(!mBridgeBuffer.empty())
     {
@@ -106,6 +110,10 @@ BridgeCrossingBoard::cross()
 void
 BridgeCrossingBoard::movePlayer(Identifier uniquePlayerId)
 {
+    if(mIsPaused)
+    {
+        return;
+    }
     if(!mPlayerIdMap.contains(uniquePlayerId))
     {
         return;
@@ -181,17 +189,50 @@ BridgeCrossingBoard::continueGame()
 void
 BridgeCrossingBoard::settingsChanged()
 {
+    mPlayers.resize(mSettings.allPlayers());
+    mPlayers.clear();
+
+    for(unsigned i = 0; i<mSettings.getSlowPlayerNumber(); ++i)
+    {
+        Identifier id = mRandomDevice.random();
+        std::shared_ptr<BridgeCrossingPlayer> player = std::make_shared<BridgeCrossingPlayer>(id,
+                                                                BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
+                                                                BridgeCrossingTypes::PlayerType::SLOW);
+        mPlayerIdMap.insert(id, player);
+        mPlayers.push_back(player);
+    }
+    for(unsigned i = 0; i<mSettings.getMediumPlayerNumber(); ++i)
+    {
+        Identifier id = mRandomDevice.random();
+        std::shared_ptr<BridgeCrossingPlayer> player = std::make_shared<BridgeCrossingPlayer>(id,
+                                                                BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
+                                                                BridgeCrossingTypes::PlayerType::MEDIUM);
+        mPlayerIdMap.insert(id, player);
+        mPlayers.push_back(player);
+    }
+    for(unsigned i = 0; i<mSettings.getFastPlayerNumber(); ++i)
+    {
+        Identifier id = mRandomDevice.random();
+        std::shared_ptr<BridgeCrossingPlayer> player = std::make_shared<BridgeCrossingPlayer>(id,
+                                                                BridgeCrossingTypes::PlayerState::ON_CROSSING_SIDE,
+                                                                BridgeCrossingTypes::PlayerType::FAST);
+        mPlayerIdMap.insert(id, player);
+        mPlayers.push_back(player);
+    }
+
+    connectToPlayers();
     startNewGame();
 }
 
 void
 BridgeCrossingBoard::onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSet action)
 {
-    BridgeCrossingPlayer* sender = qobject_cast<BridgeCrossingPlayer*>(QObject::sender());
     if(mIsPaused)
     {
         return;
     }
+
+    BridgeCrossingPlayer* sender = qobject_cast<BridgeCrossingPlayer*>(QObject::sender());
 
     auto transitionIt = boardStateTransitionMap.find(action);
     if(transitionIt != boardStateTransitionMap.end())
@@ -203,6 +244,7 @@ BridgeCrossingBoard::onPlayerActionPerformed(BridgeCrossingTypes::PlayerActionSe
     auto legalGameState = legalPlayerStateMap.find(sender->getPlayerState());
     if(legalGameState->second != mGameState)
     {
+        resetPlayerOnIllegalMove(sender->getUniqueId());
         return;
     }
     PlayerIdMap changed{};
