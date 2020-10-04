@@ -8,11 +8,11 @@ INCLUDEPATH += logic/include \
                 view/include \
                 common/include
 
-SUBDIRS += view \
-            logic \
+SUBDIRS +=  common \
             access \
-            common \
+            logic \
             test \
+            view
 
 RESOURCES = res.qrc
 
